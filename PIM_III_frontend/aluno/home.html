@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduQuest — Painel do Aluno</title>
+<link rel="stylesheet" href="../assets/css/global.css">
+<link rel="stylesheet" href="../assets/css/aluno.css">
+</head>
+<body>
+<!-- ===================== HOME (ALUNO) ===================== -->
+<div id="screen-home" class="screen active">
+  <nav class="navbar">
+    <div class="nav-logo" onclick="showHome()"><span class="nav-logo-icon">🎮</span> EduQuest</div>
+    <span class="nav-role-badge aluno">Aluno</span>
+    <div class="nav-links">
+      <button class="nav-link active" onclick="showHome()">🏠 Home</button>
+      <button class="nav-link">🛒 Loja</button>
+      <button class="nav-link" onclick="showSettings()">⚙️ Configurações</button>
+      <button class="nav-link">💎 Diamantes</button>
+    </div>
+    <div class="nav-right">
+      <span class="nav-stat">🏆 3</span>
+      <span class="nav-stat">💎 4</span>
+      <div class="nav-avatar" onclick="toggleDropdown()">🧑</div>
+      <button class="nav-menu-btn" onclick="toggleDropdown()">⋮</button>
+    </div>
+  </nav>
+
+  <div class="home-content">
+    <div class="levels-row">
+      <div class="level-card" onclick="goToQuiz()">
+        <div class="level-card-top green">
+          <h3>Nível Fácil</h3>
+          <div class="sub">1/5 Concluídas</div>
+          <div class="level-trail">
+            <div class="trail-node active">1</div>
+            <div class="trail-line"></div>
+            <div class="trail-node locked">🔒</div>
+            <div class="trail-line"></div>
+            <div class="trail-node locked">🔒</div>
+            <div class="trail-line"></div>
+            <div class="trail-node locked">🔒</div>
+          </div>
+        </div>
+        <div class="level-card-bot"><span>💎 +5 Diamantes</span><span style="color:#e0e0e0">|</span><span>🏆 +1 Troféu</span></div>
+      </div>
+
+      <div class="level-card level-locked" onclick="openModal('modal-trail')">
+        <div class="level-card-top yellow" style="min-height:160px;">
+          <h3>Nível Médio</h3>
+          <div class="lock-icon" style="font-size:42px;margin-top:12px;">🔒</div>
+        </div>
+        <div class="level-card-bot"><span>💎 +10 Diamantes</span></div>
+      </div>
+
+      <div class="level-card level-locked" onclick="openModal('modal-trail')">
+        <div class="level-card-top red" style="min-height:160px;">
+          <h3>Nível Difícil</h3>
+          <div class="lock-icon" style="font-size:42px;margin-top:12px;">🔒</div>
+        </div>
+        <div class="level-card-bot"><span>💎 +10 Diamantes</span></div>
+      </div>
+    </div>
+
+    <div class="quick-actions">
+      <button class="qa-btn" onclick="goToQuiz()"><span class="qa-icon">📚</span><span class="qa-label">Atividades</span></button>
+      <button class="qa-btn" onclick="showAvaliacoes()"><span class="qa-icon">📋</span><span class="qa-label">Avaliações</span></button>
+      <button class="qa-btn"><span class="qa-icon">✉️</span><span class="qa-label">Notificações</span></button>
+      <button class="qa-btn"><span class="qa-icon">❓</span><span class="qa-label">FAQ</span></button>
+    </div>
+
+    <div class="missions-card">
+      <div class="missions-header">
+        <div class="missions-title">☑️ Missões</div>
+        <div class="missions-count">0/2</div>
+      </div>
+      <div class="mission-divider"></div>
+      <div class="mission-item">
+        <span class="mission-check">○</span>
+        Complete 2 atividades
+        <span class="mission-reward">💎 +2 Diamantes</span>
+      </div>
+      <div class="mission-item">
+        <span class="mission-check">○</span>
+        Acerte 5 questões sem errar
+        <span class="mission-reward">💎 +1 Diamante</span>
+      </div>
+      <div style="margin-top:14px;">
+        <button class="btn-ver-missoes">Ver Missões</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SETTINGS ===================== -->
+<div id="screen-settings" class="screen">
+  <nav class="navbar">
+    <div class="nav-logo" onclick="showHome()"><span class="nav-logo-icon">🎮</span> EduQuest</div>
+    <span class="nav-role-badge aluno">Aluno</span>
+    <div class="nav-links">
+      <button class="nav-link" onclick="showHome()">🏠 Home</button>
+      <button class="nav-link">🛒 Loja</button>
+      <button class="nav-link active">⚙️ Configurações</button>
+      <button class="nav-link">💎 Diamantes</button>
+    </div>
+    <div class="nav-right">
+      <span class="nav-stat">🏆 3</span>
+      <span class="nav-stat">💎 4</span>
+      <div class="nav-avatar" onclick="toggleDropdown()">🧑</div>
+      <button class="nav-menu-btn" onclick="toggleDropdown()">⋮</button>
+    </div>
+  </nav>
+  <div class="settings-content">
+    <div class="breadcrumb">Home &gt; Configurações</div>
+    <div class="settings-title">Configurações</div>
+    <div class="settings-sub">Personalize sua experiência na plataforma</div>
+    <div class="settings-grid">
+      <div class="settings-card"><span class="settings-card-icon">👤</span><div class="settings-card-body"><div class="settings-card-title">Perfil</div><div class="settings-card-desc">Edite suas informações pessoais, foto, e preferências do perfil.</div></div><span class="settings-card-arrow">&gt;</span></div>
+      <div class="settings-card"><span class="settings-card-icon">📚</span><div class="settings-card-body"><div class="settings-card-title">Estudo</div><div class="settings-card-desc">Configure suas preferências de estudo, lembretes e metas.</div></div><span class="settings-card-arrow">&gt;</span></div>
+      <div class="settings-card"><span class="settings-card-icon">🔒</span><div class="settings-card-body"><div class="settings-card-title">Conta</div><div class="settings-card-desc">Gerencie seus dados de login, email, senha e autenticação.</div></div><span class="settings-card-arrow">&gt;</span></div>
+      <div class="settings-card"><span class="settings-card-icon">❓</span><div class="settings-card-body"><div class="settings-card-title">Ajuda</div><div class="settings-card-desc">Constate nosso suporte para dúvidas ou sugestões.</div></div><span class="settings-card-arrow">&gt;</span></div>
+      <div class="settings-card"><span class="settings-card-icon">♿</span><div class="settings-card-body"><div class="settings-card-title">Acessibilidade</div><div class="settings-card-desc">Tamanho da fonte, contraste, e outros recursos.</div></div><span class="settings-card-arrow">&gt;</span></div>
+      <div class="settings-card"><span class="settings-card-icon">ℹ️</span><div class="settings-card-body"><div class="settings-card-title">Sobre</div><div class="settings-card-desc">Termos de uso, política de privacidade e informações.</div></div><span class="settings-card-arrow">&gt;</span></div>
+    </div>
+    <div class="settings-toggles">
+      <div class="toggle-group"><span>Tema:</span><label class="toggle-switch theme"><input type="checkbox" id="toggle-theme"><span class="toggle-slider"></span></label></div>
+      <div class="toggle-group"><span>Notificações:</span><label class="toggle-switch"><input type="checkbox" id="toggle-notif" checked><span class="toggle-slider"></span></label></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== AVALIAÇÕES (ALUNO) ===================== -->
+<div id="screen-avaliacoes-aluno" class="screen">
+  <nav class="navbar">
+    <div class="nav-logo" onclick="showHome()"><span class="nav-logo-icon">🎮</span> EduQuest</div>
+    <span class="nav-role-badge aluno">Aluno</span>
+    <div class="nav-links">
+      <button class="nav-link" onclick="showHome()">🏠 Home</button>
+      <button class="nav-link active">📋 Avaliações</button>
+      <button class="nav-link" onclick="showSettings()">⚙️ Configurações</button>
+      <button class="nav-link">💎 Diamantes</button>
+    </div>
+    <div class="nav-right">
+      <span class="nav-stat">🏆 3</span>
+      <span class="nav-stat">💎 4</span>
+      <div class="nav-avatar" onclick="toggleDropdown()">🧑</div>
+      <button class="nav-menu-btn" onclick="toggleDropdown()">⋮</button>
+    </div>
+  </nav>
+
+  <div class="home-content">
+    <div class="quick-actions">
+      <button class="qa-btn" onclick="setAvFilter('all')" id="av-filter-all" style="background:var(--purple-dark);">Todas</button>
+      <button class="qa-btn" onclick="setAvFilter('easy')" id="av-filter-easy">Fácil</button>
+      <button class="qa-btn" onclick="setAvFilter('medium')" id="av-filter-medium">Médio</button>
+      <button class="qa-btn" onclick="setAvFilter('hard')" id="av-filter-hard">Difícil</button>
+    </div>
+    
+    <div class="missions-card">
+      <div class="missions-header">
+        <div class="missions-title">📋 Avaliações Disponíveis</div>
+        <div class="missions-count" id="avaliacoes-aluno-count">3 avaliações</div>
+      </div>
+      <div class="mission-divider"></div>
+      <div id="avaliacoes-aluno-list">
+        <div class="mission-item" data-nivel="easy" onclick="startLevel('easy')">
+          <span class="mission-check">📝</span>
+          Avaliação POO Básico - Programação
+          <span class="mission-reward"><span class="diff-badge easy">Fácil</span></span>
+        </div>
+        <div class="mission-item" data-nivel="medium" onclick="openModal('modal-trail')">
+          <span class="mission-check">📝</span>
+          Engenharia Software II - Eng. Software
+          <span class="mission-reward"><span class="diff-badge medium">Médio</span></span>
+        </div>
+        <div class="mission-item" data-nivel="hard" onclick="openModal('modal-trail')">
+          <span class="mission-check">📝</span>
+          Banco de Dados Avançado - BD
+          <span class="mission-reward"><span class="diff-badge hard">Difícil</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast notification -->
+
+<!-- ===================== DROPDOWN MENU ===================== -->
+<div class="dropdown-overlay" id="dropdown-overlay" onclick="closeDropdown()">
+  <div class="dropdown-menu" onclick="event.stopPropagation()">
+    <button class="dropdown-item" onclick="closeDropdown()"><span class="icon">👤</span> Usuário</button>
+    <button class="dropdown-item" onclick="closeDropdown(); showSettings()"><span class="icon">⚙️</span> Configurações</button>
+    <button class="dropdown-item" onclick="closeDropdown()"><span class="icon">🔔</span> Notificações</button>
+    <button class="dropdown-item danger" onclick="closeDropdown(); goToLogin()"><span class="icon">🚪</span> Sair</button>
+  </div>
+</div>
+
+<!-- MODAL: trilha não concluída -->
+<div class="modal-overlay" id="modal-trail">
+  <div class="modal-box">
+    <h2>Você ainda não completou a trilha anterior!</h2>
+    <button class="btn-ok" onclick="closeModal('modal-trail')">Ok!</button>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div class="toast" id="toast">✅ Ação realizada com sucesso!</div>
+
+<script src="../assets/js/utils.js"></script>
+<script src="../assets/js/quiz.js"></script>
+<script src="../assets/js/navigation.js"></script>
+<script>
+function showHome() { goToHome(); }
+
+function showSettings() {
+  document.getElementById('screen-settings').classList.add('active');
+  document.getElementById('screen-home').classList.remove('active');
+  window.scrollTo(0, 0);
+}
+
+function goToLogin() { window.location.href = '../index.html'; }
+function goToQuiz() { window.location.href = 'quiz.html'; }
+
+function showAvaliacoes() {
+  document.getElementById('screen-avaliacoes-aluno').classList.add('active');
+  document.getElementById('screen-home').classList.remove('active');
+  document.getElementById('screen-settings').classList.remove('active');
+  window.scrollTo(0, 0);
+}
+
+let avAlunoFilter = 'all';
+
+function setAvFilter(nivel) {
+  avAlunoFilter = nivel;
+  document.querySelectorAll('#av-filter-easy, #av-filter-medium, #av-filter-hard').forEach(el => {
+    el.className = 'qa-btn';
+  });
+  const filterEl = document.getElementById('av-filter-' + nivel);
+  if (filterEl) filterEl.className = 'qa-btn';
+  else document.getElementById('av-filter-all').className = 'qa-btn';
+  
+  const items = document.querySelectorAll('#avaliacoes-aluno-list .mission-item');
+  items.forEach(item => {
+    if (nivel === 'all' || item.dataset.nivel === nivel) {
+      item.style.display = '';
+    } else {
+      item.style.display = 'none';
+    }
+  });
+}
+
+// Override goToHome to stay in same file
+function goToHome() { 
+  document.getElementById('screen-home').classList.add('active');
+  document.getElementById('screen-settings').classList.remove('active');
+  window.scrollTo(0, 0);
+}
+</script>
+
+<!-- ===== VLibras Widget ===== -->
+<div vw class="enabled">
+  <div vw-access-button class="active"></div>
+  <div vw-plugin-wrapper>
+    <div class="vw-plugin-top-wrapper"></div>
+  </div>
+</div>
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+<script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
+</body>
+</html>

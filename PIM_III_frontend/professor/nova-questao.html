@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduQuest — Nova Questão</title>
+<link rel="stylesheet" href="../assets/css/global.css">
+<link rel="stylesheet" href="../assets/css/professor.css">
+</head>
+<body>
+<div id="screen-prof-nova-questao" class="screen active">
+  <nav class="navbar">
+    <div class="nav-logo"><span class="nav-logo-icon">🎮</span> EduQuest</div>
+    <span class="nav-role-badge professor">Professor</span>
+    <div class="nav-links">
+      <button class="nav-link" onclick="goToPainel()">📊 Painel</button>
+      <button class="nav-link active">➕ Nova Questão</button>
+      <button class="nav-link">📋 Minhas Avaliações</button>
+    </div>
+    <div class="nav-right">
+      <div class="nav-avatar prof">👩‍🏫</div>
+      <button class="nav-menu-btn" onclick="toggleDropdown()">⋮</button>
+    </div>
+  </nav>
+
+  <div class="prof-content">
+    <div class="panel-header">
+      <h2>Cadastrar Nova Questão</h2>
+      <p>Preencha todos os campos abaixo. A questão ficará disponível para uso nas avaliações.</p>
+    </div>
+    <div class="form-card">
+      <div class="form-field">
+        <label class="form-label">Enunciado da Questão <span style="color:var(--red)">*</span></label>
+        <textarea class="form-textarea" id="new-q-text" placeholder="Digite o enunciado completo da questão..."></textarea>
+      </div>
+
+      <div class="form-field">
+        <label class="form-label">Nível de Dificuldade <span style="color:var(--red)">*</span></label>
+        <div class="difficulty-selector">
+          <button class="diff-opt selected-easy" id="diff-easy" onclick="selectDiff('easy')">🟢 Fácil</button>
+          <button class="diff-opt" id="diff-medium" onclick="selectDiff('medium')">🟡 Médio</button>
+          <button class="diff-opt" id="diff-hard" onclick="selectDiff('hard')">🔴 Difícil</button>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label class="form-label">Alternativas <span style="color:var(--red)">*</span> <span style="font-size:12px;color:#999;font-weight:400;">(clique no círculo para marcar a correta)</span></label>
+        <div class="answer-options-list" id="answer-options">
+          <div class="answer-option-row">
+            <div class="answer-option-radio" onclick="setCorrect(0)" id="radio-0"></div>
+            <input class="form-input answer-option-input" type="text" placeholder="Alternativa A">
+          </div>
+          <div class="answer-option-row">
+            <div class="answer-option-radio" onclick="setCorrect(1)" id="radio-1"></div>
+            <input class="form-input answer-option-input" type="text" placeholder="Alternativa B">
+          </div>
+          <div class="answer-option-row">
+            <div class="answer-option-radio" onclick="setCorrect(2)" id="radio-2"></div>
+            <input class="form-input answer-option-input" type="text" placeholder="Alternativa C">
+          </div>
+          <div class="answer-option-row">
+            <div class="answer-option-radio" onclick="setCorrect(3)" id="radio-3"></div>
+            <input class="form-input answer-option-input" type="text" placeholder="Alternativa D">
+          </div>
+          <div class="answer-option-row">
+            <div class="answer-option-radio" onclick="setCorrect(4)" id="radio-4"></div>
+            <input class="form-input answer-option-input" type="text" placeholder="Alternativa E (opcional)">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label class="form-label">Explicação / Feedback Pedagógico</label>
+        <textarea class="form-textarea" id="new-q-explanation" placeholder="Explique por que a resposta está correta e esclareja as incorretas..."></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-secondary" onclick="goToPainel()">Cancelar</button>
+        <button class="btn-primary" onclick="saveQuestion()">✓ Salvar Questão</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Dropdown menu -->
+<div class="dropdown-overlay" id="dropdown-overlay" onclick="closeDropdown()">
+  <div class="dropdown-menu" onclick="event.stopPropagation()">
+    <button class="dropdown-item" onclick="closeDropdown()"><span class="icon">👤</span> Usuário</button>
+    <button class="dropdown-item" onclick="closeDropdown()"><span class="icon">🔔</span> Notificações</button>
+    <button class="dropdown-item danger" onclick="closeDropdown(); goToLogin()"><span class="icon">🚪</span> Sair</button>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div class="toast" id="toast">✅ Ação realizada com sucesso!</div>
+
+<script src="../assets/js/utils.js"></script>
+<script src="../assets/js/professor.js"></script>
+<script src="../assets/js/navigation.js"></script>
+<script>
+function goToPainel() { window.location.href = 'painel.html'; }
+function goToLogin() { window.location.href = '../index.html'; }
+</script>
+
+<!-- ===== VLibras Widget ===== -->
+<div vw class="enabled">
+  <div vw-access-button class="active"></div>
+  <div vw-plugin-wrapper>
+    <div class="vw-plugin-top-wrapper"></div>
+  </div>
+</div>
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+<script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
+</body>
+</html>

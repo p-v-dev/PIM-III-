@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduQuest — Login</title>
+<link rel="stylesheet" href="assets/css/global.css">
+</head>
+<body>
+<div id="screen-login" class="screen active">
+  <div style="text-align:center;">
+    <div class="login-role-label">Entrar como:</div>
+    <div class="login-role-selector">
+      <button class="role-btn active" onclick="selectRole('aluno', this)">🎓 Estudante</button>
+      <button class="role-btn" onclick="selectRole('professor', this)">👩‍🏫 Professor</button>
+      <button class="role-btn" onclick="selectRole('admin', this)">🛡️ Admin</button>
+    </div>
+  </div>
+
+  <div class="login-card">
+    <h1>Entre</h1>
+    <div class="login-role-indicator" id="login-role-indicator">Acesso: Estudante</div>
+    <div class="field-group">
+      <label>Email</label>
+      <input type="email" id="login-email" placeholder="seu@email.com">
+    </div>
+    <div class="field-group">
+      <label>Senha</label>
+      <div class="password-wrap">
+        <input type="password" id="login-pw" placeholder="••••••••">
+        <button class="toggle-pw" onclick="togglePw()">👁</button>
+      </div>
+    </div>
+    <button class="btn-entrar-principal" onclick="doLogin()">Entrar</button>
+    <button class="btn-cadastrar">Criar Conta</button>
+  </div>
+
+  <button class="btn-entrar-sem" onclick="selectRole('aluno',null); goToHome()">Entrar Sem Logar</button>
+</div>
+
+<script>
+let selectedRole = 'aluno';
+
+function selectRole(role, btn) {
+  selectedRole = role;
+  document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const labels = { aluno: 'Acesso: Estudante', professor: 'Acesso: Professor', admin: 'Acesso: Administrador' };
+  document.getElementById('login-role-indicator').textContent = labels[role];
+}
+
+function doLogin() {
+  if (selectedRole === 'professor') window.location.href = 'professor/painel.html';
+  else if (selectedRole === 'admin') window.location.href = 'admin/painel.html';
+  else window.location.href = 'aluno/home.html';
+}
+
+function togglePw() {
+  const pw = document.getElementById('login-pw');
+  pw.type = pw.type === 'password' ? 'text' : 'password';
+}
+
+function goToHome() { window.location.href = 'aluno/home.html'; }
+</script>
+
+<!-- ===== VLibras Widget ===== -->
+<div vw class="enabled">
+  <div vw-access-button class="active"></div>
+  <div vw-plugin-wrapper>
+    <div class="vw-plugin-top-wrapper"></div>
+  </div>
+</div>
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+<script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
+</body>
+</html>

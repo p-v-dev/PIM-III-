@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduQuest — Painel do Professor</title>
+<link rel="stylesheet" href="../assets/css/global.css">
+<link rel="stylesheet" href="../assets/css/professor.css">
+</head>
+<body>
+<div id="screen-professor" class="screen active">
+  <nav class="navbar">
+    <div class="nav-logo"><span class="nav-logo-icon">🎮</span> EduQuest</div>
+    <span class="nav-role-badge professor">Professor</span>
+    <div class="nav-links">
+      <button class="nav-link active">📊 Painel</button>
+      <button class="nav-link" onclick="goToNovaQuestao()">➕ Nova Questão</button>
+      <button class="nav-link" onclick="goToAvaliacoes()">📋 Minhas Avaliações</button>
+      <button class="nav-link">👥 Turmas</button>
+    </div>
+    <div class="nav-right">
+      <div class="nav-avatar prof" onclick="toggleDropdown()">👩‍🏫</div>
+      <button class="nav-menu-btn" onclick="toggleDropdown()">⋮</button>
+    </div>
+  </nav>
+
+  <div class="prof-content">
+    <div class="panel-header">
+      <h2>Painel Pedagógico</h2>
+      <p>Gerencie avaliações, questões e acompanhe o progresso das suas turmas.</p>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon orange">📝</div>
+        <div><div class="stat-value">12</div><div class="stat-label">Questões criadas</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green">✅</div>
+        <div><div class="stat-value">3</div><div class="stat-label">Avaliações ativas</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon blue">👥</div>
+        <div><div class="stat-value">48</div><div class="stat-label">Alunos nas turmas</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon red">⚠️</div>
+        <div><div class="stat-value">5</div><div class="stat-label">Alunos com dificuldade</div></div>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+
+      <!-- Questões recentes -->
+      <div class="section-card">
+        <div class="section-card-header">
+          <div class="section-card-title">📝 Questões Recentes</div>
+          <button class="btn-primary" onclick="goToNovaQuestao()">+ Nova</button>
+        </div>
+        <table class="data-table">
+          <thead><tr><th>Enunciado</th><th>Dificuldade</th><th>Ações</th></tr></thead>
+          <tbody id="prof-questions-tbody">
+            <tr><td>Qual conceito de POO descreve o reuso de código validado...?</td><td><span class="diff-badge easy">Fácil</span></td><td><button class="action-btn" title="Editar">✏️</button><button class="action-btn" title="Excluir">🗑️</button></td></tr>
+            <tr><td>Sobre os processos iterativos do RUP, analise as asserções...?</td><td><span class="diff-badge easy">Fácil</span></td><td><button class="action-btn" title="Editar">✏️</button><button class="action-btn" title="Excluir">🗑️</button></td></tr>
+            <tr><td>No padrão MVC, qual componente é responsável pela lógica...?</td><td><span class="diff-badge medium">Médio</span></td><td><button class="action-btn" title="Editar">✏️</button><button class="action-btn" title="Excluir">🗑️</button></td></tr>
+            <tr><td>Análise as afirmativas sobre fatores de qualidade ISO 9126...?</td><td><span class="diff-badge hard">Difícil</span></td><td><button class="action-btn" title="Editar">✏️</button><button class="action-btn" title="Excluir">🗑️</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Progresso das turmas -->
+      <div class="section-card">
+        <div class="section-card-header">
+          <div class="section-card-title">📈 Progresso das Turmas</div>
+          <button class="btn-secondary">Ver Tudo</button>
+        </div>
+        <div class="turma-grid">
+          <div class="turma-card">
+            <div class="turma-name">ADS 2024 — Turma A</div>
+            <div class="turma-meta">22 alunos · Nível Fácil</div>
+            <div class="turma-prog-label"><span>Progresso médio</span><span>68%</span></div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill green" style="width:68%"></div></div>
+          </div>
+          <div class="turma-card">
+            <div class="turma-name">ADS 2024 — Turma B</div>
+            <div class="turma-meta">26 alunos · Nível Fácil</div>
+            <div class="turma-prog-label"><span>Progresso médio</span><span>45%</span></div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill yellow" style="width:45%"></div></div>
+          </div>
+          <div class="turma-card">
+            <div class="turma-name">ADS 2023 — Turma A</div>
+            <div class="turma-meta">18 alunos · Nível Médio</div>
+            <div class="turma-prog-label"><span>Progresso médio</span><span>82%</span></div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill green" style="width:82%"></div></div>
+          </div>
+          <div class="turma-card">
+            <div class="turma-name">ADS 2023 — Turma B</div>
+            <div class="turma-meta">20 alunos · Nível Difícil</div>
+            <div class="turma-prog-label"><span>Progresso médio</span><span>31%</span></div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill red" style="width:31%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alertas pedagógicos -->
+    <div class="section-card" style="margin-top:20px;">
+      <div class="section-card-header">
+        <div class="section-card-title">🚨 Alertas Pedagógicos</div>
+        <span style="font-size:13px;color:#999;">Alunos que precisam de atenção</span>
+      </div>
+      <div class="alert-list">
+        <div class="alert-item danger"><span class="alert-icon">📉</span><div class="alert-text"><span class="alert-name">Lucas Ferreira</span> — menos de 30% de aproveitamento no Nível Fácil. Recomendado: revisão de conteúdo.</div></div>
+        <div class="alert-item warn"><span class="alert-icon">⏰</span><div class="alert-text"><span class="alert-name">Ana Rodrigues</span> — não acessa a plataforma há 7 dias.</div></div>
+        <div class="alert-item warn"><span class="alert-icon">⚡</span><div class="alert-text"><span class="alert-name">Pedro Mendes</span> — tempo médio por questão acima do esperado (>5 min).</div></div>
+        <div class="alert-item info"><span class="alert-icon">🌟</span><div class="alert-text"><span class="alert-name">Carla Santos</span> — 100% de acertos no Nível Fácil. Pronta para avançar.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Dropdown menu -->
+<div class="dropdown-overlay" id="dropdown-overlay" onclick="closeDropdown()">
+  <div class="dropdown-menu" onclick="event.stopPropagation()">
+    <button class="dropdown-item" onclick="closeDropdown()"><span class="icon">👤</span> Usuário</button>
+    <button class="dropdown-item" onclick="closeDropdown()"><span class="icon">🔔</span> Notificações</button>
+    <button class="dropdown-item danger" onclick="closeDropdown(); goToLogin()"><span class="icon">🚪</span> Sair</button>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div class="toast" id="toast">✅ Ação realizada com sucesso!</div>
+
+<script src="../assets/js/utils.js"></script>
+<script src="../assets/js/navigation.js"></script>
+<script>
+function goToNovaQuestao() { window.location.href = 'nova-questao.html'; }
+function goToAvaliacoes() { window.location.href = 'avaliacoes.html'; }
+function goToLogin() { window.location.href = '../index.html'; }
+</script>
+
+<!-- ===== VLibras Widget ===== -->
+<div vw class="enabled">
+  <div vw-access-button class="active"></div>
+  <div vw-plugin-wrapper>
+    <div class="vw-plugin-top-wrapper"></div>
+  </div>
+</div>
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+<script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
+</body>
+</html>

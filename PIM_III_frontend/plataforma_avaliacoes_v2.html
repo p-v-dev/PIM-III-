@@ -1,0 +1,2089 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduQuest — Plataforma de Avaliações</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple-bg: #9b8afc;
+    --purple-dark: #7c6af5;
+    --purple-light: #c4b8ff;
+    --green: #6fcf4a;
+    --green-dark: #4fa82e;
+    --yellow: #f5a623;
+    --red: #e84040;
+    --card-dark: #262336;
+    --card-mid: #312d45;
+    --text-light: #ffffff;
+    --text-muted: rgba(255,255,255,0.65);
+    --white: #ffffff;
+    --grey-bg: #f3f3f5;
+    --radius: 20px;
+    --radius-sm: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--grey-bg);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ===== SCREENS ===== */
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: flex; flex-direction: column; }
+
+  /* ===== LOGIN ===== */
+  #screen-login {
+    background: radial-gradient(ellipse at 20% 20%, #8bc34a 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 70%, #c8b4f8 0%, transparent 55%),
+                radial-gradient(ellipse at 60% 10%, #d4aaff 0%, transparent 40%),
+                #b0c8a0;
+    align-items: center;
+    justify-content: space-between;
+    padding: 40px 20px;
+  }
+
+  .login-role-selector {
+    display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+    margin-bottom: 8px;
+  }
+
+  .login-role-label {
+    font-size: 13px;
+    color: #333;
+    text-align: center;
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+
+  .role-btn {
+    background: white;
+    border: 3px solid transparent;
+    border-radius: 50px;
+    padding: 12px 28px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a2e;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    transition: transform 0.15s, border-color 0.15s;
+  }
+  .role-btn:hover { transform: scale(1.04); }
+  .role-btn.active { border-color: var(--purple-dark); background: #f0eeff; }
+
+  .login-card {
+    background: var(--card-dark);
+    border-radius: 28px;
+    padding: 36px 32px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  }
+
+  .login-card h1 {
+    font-family: 'Sora', sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--white);
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  .login-role-indicator {
+    text-align: center;
+    font-size: 13px;
+    color: var(--purple-light);
+    margin-bottom: 24px;
+    font-weight: 600;
+  }
+
+  .field-group { margin-bottom: 20px; }
+  .field-group label {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--white);
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .field-group input {
+    width: 100%;
+    background: #d8d5cc;
+    border: none;
+    border-radius: 50px;
+    padding: 16px 22px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    color: #555;
+    outline: none;
+    transition: box-shadow 0.2s;
+  }
+  .field-group input:focus { box-shadow: 0 0 0 3px var(--purple-light); }
+
+  .password-wrap { position: relative; }
+  .password-wrap input { padding-right: 50px; }
+  .toggle-pw {
+    position: absolute; right: 18px; top: 50%;
+    transform: translateY(-50%);
+    background: none; border: none;
+    cursor: pointer; font-size: 18px; color: #888;
+  }
+
+  .btn-cadastrar {
+    display: block;
+    margin: 28px auto 0;
+    background: #3d3a50;
+    color: #ccc;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 32px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-cadastrar:hover { background: #4d4a60; }
+
+  .btn-entrar-principal {
+    display: block;
+    margin: 16px auto 0;
+    background: var(--purple-dark);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 16px 0;
+    width: 100%;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-entrar-principal:hover { background: #6a59e0; transform: scale(1.02); }
+
+  .btn-entrar-sem {
+    background: white;
+    border: none;
+    border-radius: 50px;
+    padding: 18px 0;
+    width: 100%;
+    max-width: 320px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a2e;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    transition: transform 0.15s;
+  }
+  .btn-entrar-sem:hover { transform: scale(1.03); }
+
+  /* ===== NAVBAR ===== */
+  .navbar {
+    background: white;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    height: 68px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    position: sticky; top: 0; z-index: 100;
+  }
+
+  .nav-logo {
+    display: flex; align-items: center; gap: 8px;
+    margin-right: 32px;
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--purple-dark);
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .nav-logo-icon { font-size: 26px; }
+
+  .nav-role-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-right: 16px;
+  }
+  .nav-role-badge.aluno { background: #e8f5e9; color: #2e7d32; }
+  .nav-role-badge.professor { background: #fff3e0; color: #e65100; }
+  .nav-role-badge.admin { background: #fce4ec; color: #c62828; }
+
+  .nav-links { display: flex; gap: 4px; }
+  .nav-link {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: none; border: none;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #555;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-decoration: none;
+  }
+  .nav-link:hover { background: #f0eeff; color: var(--purple-dark); }
+  .nav-link.active { border-bottom: 2px solid var(--card-dark); color: #1a1a2e; }
+
+  .nav-right { margin-left: auto; display: flex; align-items: center; gap: 14px; }
+  .nav-stat { display: flex; align-items: center; gap: 5px; font-weight: 700; font-size: 15px; }
+  .nav-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, #f5a623, #e84040);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; cursor: pointer;
+    position: relative;
+  }
+  .nav-avatar.prof { background: linear-gradient(135deg, #f5a623, #7c6af5); }
+  .nav-avatar.adm  { background: linear-gradient(135deg, #e84040, #262336); }
+
+  .nav-menu-btn {
+    background: none; border: none;
+    font-size: 22px; cursor: pointer; color: #555;
+  }
+
+  /* Dropdown menu */
+  .dropdown-overlay {
+    display: none; position: fixed; inset: 0; z-index: 200;
+  }
+  .dropdown-overlay.open { display: block; }
+  .dropdown-menu {
+    position: absolute; top: 68px; right: 16px;
+    background: white;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    min-width: 200px;
+    overflow: hidden;
+    animation: dropIn 0.2s ease;
+  }
+  @keyframes dropIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .dropdown-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 20px;
+    font-size: 15px; font-weight: 600; color: #333;
+    cursor: pointer; border: none; background: none;
+    width: 100%; text-align: left;
+    transition: background 0.15s;
+  }
+  .dropdown-item:hover { background: #f5f4ff; }
+  .dropdown-item.danger { color: var(--red); }
+  .dropdown-item span.icon { font-size: 18px; }
+
+  /* ===== HOME (ALUNO) ===== */
+  #screen-home { background: #a89eff; }
+  .home-content { padding: 20px; flex: 1; }
+
+  .levels-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .level-card {
+    border-radius: var(--radius);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  }
+  .level-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
+
+  .level-card-top {
+    padding: 20px 16px 14px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+  }
+  .level-card-top h3 { font-size: 20px; font-weight: 800; color: white; text-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+  .level-card-top .sub { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.85); }
+
+  .level-card-top.green { background: #4caf50; }
+  .level-card-top.yellow { background: #f5a623; }
+  .level-card-top.red { background: #e84040; }
+
+  .level-trail { display: flex; align-items: center; gap: 6px; padding: 10px 14px; }
+  .trail-node {
+    width: 30px; height: 30px; border-radius: 50%;
+    border: 2px solid #aaa;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    background: white; color: #555;
+    flex-shrink: 0;
+  }
+  .trail-node.active { border-color: #333; background: white; color: #333; }
+  .trail-node.locked { color: #bbb; }
+  .trail-line { flex: 1; height: 2px; border-top: 2px dashed #ccc; }
+
+  .level-card-bot {
+    background: white;
+    padding: 10px 14px;
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 700; color: #555;
+  }
+  .level-card-bot .lock-icon { font-size: 22px; color: white; }
+
+  .level-locked .level-card-top {
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* Quick actions */
+  .quick-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .qa-btn {
+    background: #7c6af5;
+    border: none; border-radius: var(--radius-sm);
+    padding: 16px 10px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    cursor: pointer;
+    transition: transform 0.15s, background 0.15s;
+    font-family: 'Nunito', sans-serif;
+  }
+  .qa-btn:hover { transform: scale(1.04); background: #6a59e0; }
+  .qa-btn span.qa-icon { font-size: 26px; }
+  .qa-btn span.qa-label { font-size: 12px; font-weight: 700; color: white; }
+
+  /* Missions */
+  .missions-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+  .missions-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 4px;
+  }
+  .missions-title { font-size: 17px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+  .missions-count { font-size: 13px; color: #999; }
+  .mission-divider { height: 1px; background: #f0f0f0; margin: 10px 0; }
+  .mission-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 6px 0; font-size: 14px; color: #444; font-weight: 600;
+  }
+  .mission-check { font-size: 20px; color: #ddd; }
+  .mission-reward { margin-left: auto; font-size: 13px; font-weight: 700; color: #555; display: flex; align-items: center; gap: 4px; }
+  .btn-ver-missoes {
+    margin-top: 14px;
+    background: var(--green);
+    border: none; border-radius: 50px;
+    padding: 9px 28px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px; font-weight: 700; color: #1a2a0a;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .btn-ver-missoes:hover { background: var(--green-dark); color: white; }
+
+  /* ===== SETTINGS ===== */
+  #screen-settings { background: #a89eff; }
+
+  .settings-content { padding: 24px; flex: 1; }
+  .breadcrumb { font-size: 13px; color: rgba(255,255,255,0.75); margin-bottom: 10px; }
+  .settings-title { font-size: 42px; font-weight: 900; color: white; margin-bottom: 6px; }
+  .settings-sub { font-size: 14px; color: rgba(255,255,255,0.8); margin-bottom: 28px; }
+
+  .settings-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .settings-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 22px 20px;
+    display: flex; align-items: flex-start; gap: 16px;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  }
+  .settings-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.14); }
+  .settings-card-icon { font-size: 36px; flex-shrink: 0; }
+  .settings-card-body { flex: 1; }
+  .settings-card-title { font-size: 18px; font-weight: 800; color: #1a1a2e; margin-bottom: 4px; }
+  .settings-card-desc { font-size: 13px; color: #777; line-height: 1.5; }
+  .settings-card-arrow { font-size: 18px; color: #bbb; align-self: center; }
+
+  .settings-toggles {
+    background: white;
+    border-radius: 50px;
+    padding: 18px 36px;
+    display: inline-flex; align-items: center; gap: 36px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+  }
+  .toggle-group { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: 700; color: #333; }
+
+  .toggle-switch { position: relative; width: 56px; height: 30px; }
+  .toggle-switch input { opacity: 0; width: 0; height: 0; }
+  .toggle-slider {
+    position: absolute; inset: 0;
+    background: #ccc; border-radius: 30px;
+    cursor: pointer; transition: background 0.2s;
+    border: 2px solid #bbb;
+  }
+  .toggle-slider::before {
+    content: '';
+    position: absolute;
+    width: 22px; height: 22px;
+    left: 2px; top: 2px;
+    background: white; border-radius: 50%;
+    transition: transform 0.2s;
+  }
+  .toggle-switch input:checked + .toggle-slider { background: var(--green); border-color: var(--green); }
+  .toggle-switch input:checked + .toggle-slider::before { transform: translateX(26px); }
+  .toggle-switch.theme input:checked + .toggle-slider { background: var(--yellow); border-color: var(--yellow); }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.45); z-index: 300;
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: #f0f0f2;
+    border-radius: 24px;
+    padding: 48px 40px;
+    max-width: 480px; width: 90%;
+    text-align: center;
+    animation: popIn 0.25s ease;
+  }
+  @keyframes popIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .modal-box h2 {
+    font-size: 32px; font-weight: 900; color: #1a1a2e;
+    line-height: 1.2; margin-bottom: 36px;
+  }
+  .btn-ok {
+    background: var(--green);
+    color: white;
+    border: none; border-radius: 50px;
+    padding: 18px 72px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 20px; font-weight: 700;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .btn-ok:hover { background: var(--green-dark); }
+
+  /* ===== QUIZ SCREEN ===== */
+  #screen-quiz { background: #a89eff; }
+
+  .quiz-topbar {
+    display: flex; align-items: flex-start;
+    padding: 20px 24px 0;
+    gap: 16px;
+  }
+
+  .btn-back-quiz {
+    background: none; border: none;
+    font-family: 'Nunito', sans-serif;
+    font-size: 17px; font-weight: 700;
+    color: #1a1a2e; cursor: pointer;
+    display: flex; align-items: center; gap: 4px;
+    padding: 4px 0;
+    white-space: nowrap;
+  }
+
+  .quiz-title-box {
+    background: white;
+    border-radius: 16px;
+    padding: 12px 24px;
+    text-align: center;
+    flex: 1;
+    font-size: 16px; font-weight: 700; color: #1a1a2e;
+    line-height: 1.3;
+  }
+
+  .level-badge {
+    border-radius: 12px;
+    padding: 10px 18px;
+    font-size: 15px; font-weight: 700; color: white;
+    white-space: nowrap;
+  }
+  .level-badge.easy { background: var(--green-dark); }
+  .level-badge.medium { background: var(--yellow); }
+  .level-badge.hard { background: var(--red); }
+
+  .quiz-content { padding: 16px 24px 24px; flex: 1; display: flex; flex-direction: column; }
+
+  .quiz-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    flex: 1;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.1);
+  }
+
+  .question-counter {
+    font-size: 14px; font-weight: 700; color: #777;
+    margin-bottom: 20px;
+  }
+  .question-counter strong { color: #1a1a2e; }
+
+  .question-text {
+    font-size: 14px; line-height: 1.75; color: #2a2a3e;
+    margin-bottom: 24px;
+    text-align: justify;
+  }
+
+  .options-list { display: flex; flex-direction: column; gap: 10px; }
+  .option-item {
+    display: flex; align-items: center; gap: 14px;
+    border: 2px solid #e0e0e8;
+    border-radius: 50px;
+    padding: 14px 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .option-item:hover { border-color: var(--purple-light); background: #f6f3ff; }
+  .option-item.selected { border-color: var(--green-dark); background: #f0fff0; }
+  .option-item.selected .option-radio { background: var(--green-dark); border-color: var(--green-dark); }
+  .option-item.correct { border-color: var(--green-dark); background: #e8f8e8; }
+  .option-item.wrong { border-color: var(--red); background: #ffe8e8; }
+
+  .option-radio {
+    width: 26px; height: 26px; border-radius: 50%;
+    border: 2px solid #ccc;
+    flex-shrink: 0; transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .option-radio.filled { background: var(--green-dark); border-color: var(--green-dark); }
+  .option-radio.filled::after { content: ''; width: 10px; height: 10px; border-radius: 50%; background: white; }
+
+  .option-text { font-size: 14px; font-weight: 600; color: #333; }
+
+  .help-buttons { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+  .help-btn {
+    background: #f3f3f3;
+    border: none; border-radius: 50px;
+    padding: 9px 18px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px; font-weight: 700; color: #555;
+    cursor: pointer; display: flex; align-items: center; gap: 6px;
+    transition: background 0.15s;
+  }
+  .help-btn:hover { background: #ebebeb; }
+  .help-btn .diamond-icon { font-size: 14px; }
+
+  .quiz-bottombar {
+    background: white;
+    border-radius: 50px;
+    padding: 14px 10px;
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  }
+  .nav-quiz-btn {
+    background: none; border: none;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px; font-weight: 700; color: #555;
+    cursor: pointer; padding: 8px 16px;
+    border-radius: 50px; transition: background 0.15s;
+  }
+  .nav-quiz-btn:hover { background: #f0eeff; color: var(--purple-dark); }
+  .nav-quiz-btn.primary { color: #1a1a2e; font-size: 15px; }
+
+  .btn-save {
+    display: flex; align-items: center; gap: 6px;
+    background: none; border: none;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px; font-weight: 700; color: #555;
+    cursor: pointer; padding: 8px 16px;
+  }
+
+  .feedback-box {
+    display: none;
+    margin-top: 16px; padding: 16px 20px;
+    border-radius: var(--radius-sm);
+    font-size: 14px; font-weight: 600; line-height: 1.6;
+  }
+  .feedback-box.correct { background: #e8f8e8; border: 2px solid var(--green); color: #1a5a1a; }
+  .feedback-box.wrong { background: #ffe8e8; border: 2px solid var(--red); color: #5a1a1a; }
+  .feedback-box.show { display: block; }
+
+  /* Result screen */
+  #screen-result {
+    background: #a89eff;
+    align-items: center; justify-content: center;
+  }
+  .result-card {
+    background: white;
+    border-radius: 28px;
+    padding: 48px 40px;
+    max-width: 500px; width: 90%;
+    text-align: center;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+    animation: popIn 0.3s ease;
+  }
+  .result-icon { font-size: 72px; margin-bottom: 16px; }
+  .result-title { font-size: 28px; font-weight: 900; color: #1a1a2e; margin-bottom: 8px; }
+  .result-score { font-size: 64px; font-weight: 900; color: var(--green-dark); margin: 16px 0; }
+  .result-sub { font-size: 16px; color: #666; margin-bottom: 32px; }
+  .result-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn-result {
+    border: none; border-radius: 50px;
+    padding: 14px 32px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px; font-weight: 700;
+    cursor: pointer; transition: transform 0.15s;
+  }
+  .btn-result:hover { transform: scale(1.03); }
+  .btn-result.primary { background: var(--purple-dark); color: white; }
+  .btn-result.secondary { background: #f0eeff; color: var(--purple-dark); }
+
+  /* ===== PROFESSOR PANEL ===== */
+  #screen-professor { background: #fff8f0; }
+  #screen-prof-nova-questao { background: #fff8f0; }
+
+  .prof-content { padding: 28px; flex: 1; }
+
+  .panel-header {
+    margin-bottom: 28px;
+  }
+  .panel-header h2 {
+    font-family: 'Sora', sans-serif;
+    font-size: 28px; font-weight: 700; color: #1a1a2e;
+    margin-bottom: 6px;
+  }
+  .panel-header p { font-size: 14px; color: #888; }
+
+  /* Stats row */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .stat-card {
+    background: white;
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+    display: flex; align-items: center; gap: 14px;
+    transition: transform 0.15s;
+  }
+  .stat-card:hover { transform: translateY(-2px); }
+  .stat-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; flex-shrink: 0;
+  }
+  .stat-icon.orange { background: #fff3e0; }
+  .stat-icon.green  { background: #e8f5e9; }
+  .stat-icon.blue   { background: #e3f2fd; }
+  .stat-icon.red    { background: #fce4ec; }
+  .stat-value { font-size: 26px; font-weight: 900; color: #1a1a2e; }
+  .stat-label { font-size: 13px; color: #888; }
+
+  /* Section card */
+  .section-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+  }
+  .section-card-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .section-card-title {
+    font-size: 18px; font-weight: 800; color: #1a1a2e;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .btn-primary {
+    background: var(--purple-dark);
+    color: white;
+    border: none; border-radius: 50px;
+    padding: 10px 24px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px; font-weight: 700;
+    cursor: pointer; transition: background 0.2s, transform 0.15s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .btn-primary:hover { background: #6a59e0; transform: scale(1.02); }
+
+  .btn-secondary {
+    background: #f0eeff;
+    color: var(--purple-dark);
+    border: none; border-radius: 50px;
+    padding: 10px 24px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px; font-weight: 700;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .btn-secondary:hover { background: #e0d8ff; }
+
+  /* Table */
+  .data-table { width: 100%; border-collapse: collapse; }
+  .data-table th {
+    text-align: left;
+    font-size: 12px; font-weight: 700;
+    color: #999; text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0 16px 12px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .data-table td {
+    padding: 14px 16px;
+    font-size: 14px; color: #333;
+    border-bottom: 1px solid #f8f8f8;
+    vertical-align: middle;
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: #fafafa; }
+
+  .diff-badge {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 12px; font-weight: 700;
+  }
+  .diff-badge.easy   { background: #e8f5e9; color: #2e7d32; }
+  .diff-badge.medium { background: #fff3e0; color: #e65100; }
+  .diff-badge.hard   { background: #fce4ec; color: #c62828; }
+
+  .action-btn {
+    background: none; border: none; cursor: pointer;
+    font-size: 16px; padding: 4px 8px;
+    border-radius: 6px;
+    transition: background 0.15s;
+    color: #666;
+  }
+  .action-btn:hover { background: #f0f0f0; }
+
+  /* Progress bar */
+  .progress-bar-wrap { width: 100%; background: #f0f0f0; border-radius: 20px; height: 8px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; border-radius: 20px; transition: width 0.5s; }
+  .progress-bar-fill.green { background: var(--green-dark); }
+  .progress-bar-fill.yellow { background: var(--yellow); }
+  .progress-bar-fill.red { background: var(--red); }
+
+  /* Turma progress grid */
+  .turma-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .turma-card {
+    border: 2px solid #f0f0f0;
+    border-radius: var(--radius-sm);
+    padding: 16px;
+  }
+  .turma-name { font-size: 15px; font-weight: 800; color: #1a1a2e; margin-bottom: 4px; }
+  .turma-meta { font-size: 12px; color: #999; margin-bottom: 12px; }
+  .turma-prog-label { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; color: #555; margin-bottom: 6px; }
+
+  /* Alert cards */
+  .alert-list { display: flex; flex-direction: column; gap: 10px; }
+  .alert-item {
+    display: flex; align-items: center; gap: 14px;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    border-left: 4px solid;
+  }
+  .alert-item.warn { background: #fff8e1; border-color: var(--yellow); }
+  .alert-item.danger { background: #fff3f3; border-color: var(--red); }
+  .alert-item.info { background: #f3f8ff; border-color: #42a5f5; }
+  .alert-icon { font-size: 20px; flex-shrink: 0; }
+  .alert-text { font-size: 13px; font-weight: 600; color: #444; }
+  .alert-name { font-weight: 800; color: #1a1a2e; }
+
+  /* ===== NOVA QUESTÃO FORM ===== */
+  .form-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 32px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+    max-width: 800px;
+  }
+
+  .form-field { margin-bottom: 24px; }
+  .form-label {
+    display: block;
+    font-size: 15px; font-weight: 700; color: #1a1a2e;
+    margin-bottom: 8px;
+  }
+  .form-input, .form-textarea, .form-select {
+    width: 100%;
+    border: 2px solid #e8e8f0;
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px; color: #333;
+    outline: none;
+    transition: border-color 0.2s;
+    background: white;
+  }
+  .form-input:focus, .form-textarea:focus, .form-select:focus {
+    border-color: var(--purple-dark);
+  }
+  .form-textarea { min-height: 120px; resize: vertical; line-height: 1.6; }
+
+  .difficulty-selector { display: flex; gap: 10px; }
+  .diff-opt {
+    flex: 1; padding: 12px;
+    border: 2px solid #e8e8f0;
+    border-radius: var(--radius-sm);
+    background: white; cursor: pointer;
+    text-align: center; font-family: 'Nunito', sans-serif;
+    font-size: 14px; font-weight: 700; color: #888;
+    transition: all 0.15s;
+  }
+  .diff-opt.selected-easy   { border-color: #4caf50; background: #e8f5e9; color: #2e7d32; }
+  .diff-opt.selected-medium { border-color: var(--yellow); background: #fff8e1; color: #e65100; }
+  .diff-opt.selected-hard   { border-color: var(--red); background: #fce4ec; color: #c62828; }
+
+  .answer-options-list { display: flex; flex-direction: column; gap: 10px; }
+  .answer-option-row {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .answer-option-radio {
+    width: 24px; height: 24px; border-radius: 50%;
+    border: 2px solid #ccc;
+    cursor: pointer; flex-shrink: 0;
+    transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .answer-option-radio.correct-answer { border-color: var(--green-dark); background: var(--green-dark); }
+  .answer-option-radio.correct-answer::after { content: '✓'; color: white; font-size: 12px; font-weight: 700; }
+  .answer-option-input { flex: 1; }
+
+  .form-actions { display: flex; gap: 12px; margin-top: 32px; }
+
+  /* ===== ADMIN PANEL ===== */
+  #screen-admin { background: #1a1a2e; }
+
+  .admin-layout {
+    display: flex; flex: 1; min-height: calc(100vh - 68px);
+  }
+
+  .admin-sidebar {
+    width: 240px; background: #262336; flex-shrink: 0;
+    padding: 24px 0;
+    display: flex; flex-direction: column;
+  }
+  .sidebar-section-label {
+    font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.4);
+    text-transform: uppercase; letter-spacing: 1px;
+    padding: 8px 24px 6px;
+    margin-top: 16px;
+  }
+  .sidebar-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 24px;
+    font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.7);
+    cursor: pointer; border: none; background: none;
+    font-family: 'Nunito', sans-serif;
+    transition: all 0.15s;
+    width: 100%; text-align: left;
+    border-left: 3px solid transparent;
+  }
+  .sidebar-item:hover { background: rgba(255,255,255,0.06); color: white; }
+  .sidebar-item.active { background: rgba(124,106,245,0.2); color: white; border-left-color: var(--purple-dark); }
+  .sidebar-item-icon { font-size: 18px; width: 22px; text-align: center; }
+
+  .admin-main { flex: 1; padding: 28px; overflow-y: auto; }
+
+  /* Admin navbar override */
+  #screen-admin .navbar {
+    background: #262336;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+  }
+  #screen-admin .navbar .nav-logo { color: var(--purple-light); }
+  #screen-admin .navbar .nav-link { color: rgba(255,255,255,0.6); }
+  #screen-admin .navbar .nav-link:hover { background: rgba(255,255,255,0.08); color: white; }
+  #screen-admin .navbar .nav-link.active { border-color: var(--purple-light); color: white; }
+  #screen-admin .navbar .nav-stat { color: white; }
+  #screen-admin .navbar .nav-menu-btn { color: rgba(255,255,255,0.6); }
+
+  .admin-section { display: none; }
+  .admin-section.active { display: block; }
+
+  /* Admin stat cards */
+  .admin-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .admin-stat {
+    background: #262336;
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .admin-stat-label { font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 8px; }
+  .admin-stat-value { font-size: 30px; font-weight: 900; color: white; }
+  .admin-stat-sub { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 4px; }
+  .admin-stat-value.green { color: var(--green); }
+  .admin-stat-value.yellow { color: var(--yellow); }
+  .admin-stat-value.red { color: var(--red); }
+  .admin-stat-value.purple { color: var(--purple-light); }
+
+  .admin-card {
+    background: #262336;
+    border-radius: var(--radius);
+    padding: 24px;
+    border: 1px solid rgba(255,255,255,0.06);
+    margin-bottom: 20px;
+  }
+  .admin-card-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .admin-card-title {
+    font-size: 16px; font-weight: 800; color: white;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  /* Admin table */
+  .admin-table { width: 100%; border-collapse: collapse; }
+  .admin-table th {
+    text-align: left;
+    font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.4);
+    text-transform: uppercase; letter-spacing: 0.5px;
+    padding: 0 16px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .admin-table td {
+    padding: 14px 16px;
+    font-size: 14px; color: rgba(255,255,255,0.8);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    vertical-align: middle;
+  }
+  .admin-table tr:last-child td { border-bottom: none; }
+  .admin-table tr:hover td { background: rgba(255,255,255,0.03); }
+
+  .status-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 12px; border-radius: 20px;
+    font-size: 12px; font-weight: 700;
+  }
+  .status-badge::before { content: '●'; font-size: 8px; }
+  .status-badge.active   { background: rgba(111,207,74,0.15); color: var(--green); }
+  .status-badge.inactive { background: rgba(232,64,64,0.15); color: var(--red); }
+  .status-badge.pending  { background: rgba(245,166,35,0.15); color: var(--yellow); }
+
+  .role-tag {
+    display: inline-block; padding: 3px 10px; border-radius: 20px;
+    font-size: 12px; font-weight: 700;
+  }
+  .role-tag.aluno     { background: rgba(111,207,74,0.15); color: var(--green); }
+  .role-tag.professor { background: rgba(245,166,35,0.2); color: var(--yellow); }
+  .role-tag.admin     { background: rgba(155,138,252,0.2); color: var(--purple-light); }
+
+  .admin-action-btn {
+    background: rgba(255,255,255,0.06); border: none;
+    color: rgba(255,255,255,0.7); cursor: pointer;
+    font-size: 14px; padding: 6px 12px;
+    border-radius: 6px; font-family: 'Nunito', sans-serif;
+    font-weight: 600; transition: all 0.15s;
+    margin-right: 4px;
+  }
+  .admin-action-btn:hover { background: rgba(255,255,255,0.12); color: white; }
+  .admin-action-btn.danger:hover { background: rgba(232,64,64,0.2); color: var(--red); }
+
+  /* Modal for adding user */
+  .modal-dark {
+    background: #312d45;
+    border-radius: 24px;
+    padding: 36px;
+    max-width: 500px; width: 90%;
+    animation: popIn 0.25s ease;
+  }
+  .modal-dark h3 {
+    font-size: 22px; font-weight: 900; color: white;
+    margin-bottom: 24px;
+  }
+  .dark-field { margin-bottom: 18px; }
+  .dark-label {
+    display: block; font-size: 13px; font-weight: 700;
+    color: rgba(255,255,255,0.6); margin-bottom: 8px;
+  }
+  .dark-input, .dark-select {
+    width: 100%;
+    background: rgba(255,255,255,0.07);
+    border: 1.5px solid rgba(255,255,255,0.12);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px; color: white;
+    outline: none; transition: border-color 0.2s;
+  }
+  .dark-input:focus, .dark-select:focus { border-color: var(--purple-light); }
+  .dark-select option { background: #312d45; color: white; }
+  .modal-actions { display: flex; gap: 12px; margin-top: 28px; justify-content: flex-end; }
+
+  /* Log items */
+  .log-list { display: flex; flex-direction: column; gap: 0; }
+  .log-item {
+    display: flex; align-items: center; gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 13px; color: rgba(255,255,255,0.6);
+  }
+  .log-item:last-child { border-bottom: none; }
+  .log-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .log-dot.green { background: var(--green); }
+  .log-dot.yellow { background: var(--yellow); }
+  .log-dot.red { background: var(--red); }
+  .log-dot.blue { background: #42a5f5; }
+  .log-time { margin-left: auto; font-size: 12px; white-space: nowrap; }
+
+  /* Search input */
+  .search-bar {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(255,255,255,0.07);
+    border: 1.5px solid rgba(255,255,255,0.1);
+    border-radius: 50px; padding: 10px 18px;
+    margin-bottom: 20px; max-width: 360px;
+  }
+  .search-bar input {
+    background: none; border: none; outline: none;
+    font-family: 'Nunito', sans-serif; font-size: 14px;
+    color: white; width: 100%;
+  }
+  .search-bar input::placeholder { color: rgba(255,255,255,0.3); }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    .stats-row, .admin-stats { grid-template-columns: 1fr 1fr; }
+    .admin-sidebar { display: none; }
+  }
+  @media (max-width: 700px) {
+    .levels-row { grid-template-columns: 1fr; }
+    .settings-grid { grid-template-columns: 1fr; }
+    .quick-actions { grid-template-columns: 1fr 1fr; }
+    .turma-grid { grid-template-columns: 1fr; }
+    .level-card-top h3 { font-size: 16px; }
+    .prof-content, .admin-main { padding: 16px; }
+  }
+
+  .flex-center { display: flex; align-items: center; justify-content: center; }
+  .gap-8 { gap: 8px; }
+  .mt-12 { margin-top: 12px; }
+
+  /* Notification toast */
+  .toast {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(100px);
+    background: #312d45; color: white;
+    padding: 14px 28px; border-radius: 50px;
+    font-size: 14px; font-weight: 700;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    z-index: 999;
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- ===================== LOGIN ===================== -->
+<div id="screen-login" class="screen active">
+  <div style="text-align:center;">
+    <div class="login-role-label">Entrar como:</div>
+    <div class="login-role-selector">
+      <button class="role-btn active" onclick="selectRole('aluno', this)">🎓 Estudante</button>
+      <button class="role-btn" onclick="selectRole('professor', this)">👩‍🏫 Professor</button>
+      <button class="role-btn" onclick="selectRole('admin', this)">🛡️ Admin</button>
+    </div>
+  </div>
+
+  <div class="login-card">
+    <h1>Entre</h1>
+    <div class="login-role-indicator" id="login-role-indicator">Acesso: Estudante</div>
+    <div class="field-group">
+      <label>Email</label>
+      <input type="email" id="login-email" placeholder="seu@email.com">
+    </div>
+    <div class="field-group">
+      <label>Senha</label>
+      <div class="password-wrap">
+        <input type="password" id="login-pw" placeholder="••••••••">
+        <button class="toggle-pw" onclick="togglePw()">👁</button>
+      </div>
+    </div>
+    <button class="btn-entrar-principal" onclick="doLogin()">Entrar</button>
+    <button class="btn-cadastrar">Criar Conta</button>
+  </div>
+
+  <button class="btn-entrar-sem" onclick="selectRole('aluno',null); showScreen('home')">Entrar Sem Logar</button>
+</div>
+
+<!-- ===================== DROPDOWN MENU ===================== -->
+<div class="dropdown-overlay" id="dropdown-overlay" onclick="closeDropdown()">
+  <div class="dropdown-menu" onclick="event.stopPropagation()">
+    <button class="dropdown-item" onclick="closeDropdown()"><span class="icon">👤</span> Usuário</button>
+    <button class="dropdown-item" onclick="closeDropdown(); showScreen('settings')"><span class="icon">⚙️</span> Configurações</button>
+    <button class="dropdown-item" onclick="closeDropdown()"><span class="icon">🔔</span> Notificações</button>
+    <button class="dropdown-item danger" onclick="closeDropdown(); showScreen('login')"><span class="icon">🚪</span> Sair</button>
+  </div>
+</div>
+
+<!-- MODAL: trilha não concluída -->
+<div class="modal-overlay" id="modal-trail">
+  <div class="modal-box">
+    <h2>Você ainda não completou a trilha anterior!</h2>
+    <button class="btn-ok" onclick="closeModal('modal-trail')">Ok!</button>
+  </div>
+</div>
+
+<!-- MODAL: adicionar usuário (admin) -->
+<div class="modal-overlay" id="modal-add-user">
+  <div class="modal-dark" onclick="event.stopPropagation()">
+    <h3>➕ Novo Usuário</h3>
+    <div class="dark-field">
+      <label class="dark-label">Nome Completo</label>
+      <input class="dark-input" type="text" placeholder="Ex: Maria da Silva" id="new-user-name">
+    </div>
+    <div class="dark-field">
+      <label class="dark-label">E-mail</label>
+      <input class="dark-input" type="email" placeholder="usuario@escola.edu.br" id="new-user-email">
+    </div>
+    <div class="dark-field">
+      <label class="dark-label">Perfil</label>
+      <select class="dark-select" id="new-user-role">
+        <option value="aluno">🎓 Aluno</option>
+        <option value="professor">👩‍🏫 Professor</option>
+        <option value="admin">🛡️ Administrador</option>
+      </select>
+    </div>
+    <div class="dark-field">
+      <label class="dark-label">Senha Inicial</label>
+      <input class="dark-input" type="password" placeholder="Mínimo 8 caracteres" id="new-user-pw">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('modal-add-user')">Cancelar</button>
+      <button class="btn-primary" onclick="addUser()">✓ Criar Usuário</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div class="toast" id="toast">✅ Ação realizada com sucesso!</div>
+
+<!-- ===================== HOME (ALUNO) ===================== -->
+<div id="screen-home" class="screen">
+  <nav class="navbar">
+    <div class="nav-logo" onclick="showScreen('home')"><span class="nav-logo-icon">🎮</span> EduQuest</div>
+    <span class="nav-role-badge aluno">Aluno</span>
+    <div class="nav-links">
+      <button class="nav-link active" onclick="showScreen('home')">🏠 Home</button>
+      <button class="nav-link">🛒 Loja</button>
+      <button class="nav-link" onclick="showScreen('settings')">⚙️ Configurações</button>
+      <button class="nav-link">💎 Diamantes</button>
+    </div>
+    <div class="nav-right">
+      <span class="nav-stat">🏆 3</span>
+      <span class="nav-stat">💎 4</span>
+      <div class="nav-avatar" onclick="toggleDropdown()">🧑</div>
+      <button class="nav-menu-btn" onclick="toggleDropdown()">⋮</button>
+    </div>
+  </nav>
+
+  <div class="home-content">
+    <div class="levels-row">
+      <div class="level-card" onclick="startLevel('easy')">
+        <div class="level-card-top green">
+          <h3>Nível Fácil</h3>
+          <div class="sub">1/5 Concluídas</div>
+          <div class="level-trail">
+            <div class="trail-node active">1</div>
+            <div class="trail-line"></div>
+            <div class="trail-node locked">🔒</div>
+            <div class="trail-line"></div>
+            <div class="trail-node locked">🔒</div>
+            <div class="trail-line"></div>
+            <div class="trail-node locked">🔒</div>
+            <div class="trail-line"></div>
+            <div class="trail-node locked">🔒</div>
+          </div>
+        </div>
+        <div class="level-card-bot"><span>💎 +5 Diamantes</span><span style="color:#e0e0e0">|</span><span>🏆 +1 Troféu</span></div>
+      </div>
+
+      <div class="level-card level-locked" onclick="openModal('modal-trail')">
+        <div class="level-card-top yellow" style="min-height:160px;">
+          <h3>Nível Médio</h3>
+          <div class="lock-icon" style="font-size:42px;margin-top:12px;">🔒</div>
+        </div>
+        <div class="level-card-bot"><span>💎 +10 Diamantes</span></div>
+      </div>
+
+      <div class="level-card level-locked" onclick="openModal('modal-trail')">
+        <div class="level-card-top red" style="min-height:160px;">
+          <h3>Nível Difícil</h3>
+          <div class="lock-icon" style="font-size:42px;margin-top:12px;">🔒</div>
+        </div>
+        <div class="level-card-bot"><span>💎 +10 Diamantes</span></div>
+      </div>
+    </div>
+
+    <div class="quick-actions">
+      <button class="qa-btn" onclick="startLevel('easy')"><span class="qa-icon">📚</span><span class="qa-label">Atividades</span></button>
+      <button class="qa-btn"><span class="qa-icon">📋</span><span class="qa-label">Histórico</span></button>
+      <button class="qa-btn"><span class="qa-icon">✉️</span><span class="qa-label">Notificações</span></button>
+      <button class="qa-btn"><span class="qa-icon">❓</span><span class="qa-label">FAQ</span></button>
+    </div>
+
+    <div class="missions-card">
+      <div class="missions-header">
+        <div class="missions-title">☑️ Missões</div>
+        <div class="missions-count">0/2</div>
+      </div>
+      <div class="mission-divider"></div>
+      <div class="mission-item">
+        <span class="mission-check">○</span>
+        Complete 2 atividades
+        <span class="mission-reward">💎 +2 Diamantes</span>
+      </div>
+      <div class="mission-item">
+        <span class="mission-check">○</span>
+        Acerte 5 questões sem errar
+        <span class="mission-reward">💎 +1 Diamante</span>
+      </div>
+      <div style="margin-top:14px;">
+        <button class="btn-ver-missoes">Ver Missões</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SETTINGS ===================== -->
+<div id="screen-settings" class="screen">
+  <nav class="navbar">
+    <div class="nav-logo" onclick="showScreen('home')"><span class="nav-logo-icon">🎮</span> EduQuest</div>
+    <span class="nav-role-badge aluno">Aluno</span>
+    <div class="nav-links">
+      <button class="nav-link" onclick="showScreen('home')">🏠 Home</button>
+      <button class="nav-link">🛒 Loja</button>
+      <button class="nav-link active">⚙️ Configurações</button>
+      <button class="nav-link">💎 Diamantes</button>
+    </div>
+    <div class="nav-right">
+      <span class="nav-stat">🏆 3</span>
+      <span class="nav-stat">💎 4</span>
+      <div class="nav-avatar" onclick="toggleDropdown()">🧑</div>
+      <button class="nav-menu-btn" onclick="toggleDropdown()">⋮</button>
+    </div>
+  </nav>
+  <div class="settings-content">
+    <div class="breadcrumb">Home &gt; Configurações</div>
+    <div class="settings-title">Configurações</div>
+    <div class="settings-sub">Personalize sua experiência na plataforma</div>
+    <div class="settings-grid">
+      <div class="settings-card"><span class="settings-card-icon">👤</span><div class="settings-card-body"><div class="settings-card-title">Perfil</div><div class="settings-card-desc">Edite suas informações pessoais, foto, e preferências do perfil.</div></div><span class="settings-card-arrow">&gt;</span></div>
+      <div class="settings-card"><span class="settings-card-icon">📚</span><div class="settings-card-body"><div class="settings-card-title">Estudo</div><div class="settings-card-desc">Configure suas preferências de estudo, lembretes e metas.</div></div><span class="settings-card-arrow">&gt;</span></div>
+      <div class="settings-card"><span class="settings-card-icon">🔒</span><div class="settings-card-body"><div class="settings-card-title">Conta</div><div class="settings-card-desc">Gerencie seus dados de login, email, senha e autenticação.</div></div><span class="settings-card-arrow">&gt;</span></div>
+      <div class="settings-card"><span class="settings-card-icon">❓</span><div class="settings-card-body"><div class="settings-card-title">Ajuda</div><div class="settings-card-desc">Constate nosso suporte para dúvidas ou sugestões.</div></div><span class="settings-card-arrow">&gt;</span></div>
+      <div class="settings-card"><span class="settings-card-icon">♿</span><div class="settings-card-body"><div class="settings-card-title">Acessibilidade</div><div class="settings-card-desc">Tamanho da fonte, contraste, e outros recursos.</div></div><span class="settings-card-arrow">&gt;</span></div>
+      <div class="settings-card"><span class="settings-card-icon">ℹ️</span><div class="settings-card-body"><div class="settings-card-title">Sobre</div><div class="settings-card-desc">Termos de uso, política de privacidade e informações.</div></div><span class="settings-card-arrow">&gt;</span></div>
+    </div>
+    <div class="settings-toggles">
+      <div class="toggle-group"><span>Tema:</span><label class="toggle-switch theme"><input type="checkbox" id="toggle-theme"><span class="toggle-slider"></span></label></div>
+      <div class="toggle-group"><span>Notificações:</span><label class="toggle-switch"><input type="checkbox" id="toggle-notif" checked><span class="toggle-slider"></span></label></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== QUIZ ===================== -->
+<div id="screen-quiz" class="screen">
+  <div class="quiz-topbar">
+    <button class="btn-back-quiz" onclick="showScreen('home')">&lt; Voltar</button>
+    <div class="quiz-title-box" id="quiz-title-box">Análise e Desenvolvimento<br>de Sistemas</div>
+    <div class="level-badge easy" id="level-badge-display">Nível Fácil</div>
+  </div>
+  <div class="quiz-content">
+    <div class="quiz-card">
+      <div class="question-counter">Questão <strong id="q-current">1</strong>/<span id="q-total">5</span></div>
+      <div class="question-text" id="q-text"></div>
+      <div class="options-list" id="q-options"></div>
+      <div class="feedback-box" id="feedback-box"></div>
+      <div class="help-buttons">
+        <button class="help-btn" onclick="discardTwo()"><span class="diamond-icon">💎</span> Descartar 2 alternativas: 2</button>
+        <button class="help-btn" onclick="skipQuestion()"><span class="diamond-icon">💎</span> Pular questão: 5</button>
+      </div>
+    </div>
+    <div class="quiz-bottombar">
+      <button class="nav-quiz-btn" onclick="prevQuestion()">&lt; Anterior</button>
+      <button class="btn-save">💾 Salvar</button>
+      <button class="nav-quiz-btn primary" onclick="nextQuestion()"><strong>Próxima &gt;</strong></button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== RESULT ===================== -->
+<div id="screen-result" class="screen">
+  <div class="result-card">
+    <div class="result-icon" id="result-icon">🎉</div>
+    <div class="result-title" id="result-title">Atividade Concluída!</div>
+    <div class="result-score" id="result-score">4/5</div>
+    <div class="result-sub" id="result-sub">Você acertou 80% das questões!</div>
+    <div class="result-actions">
+      <button class="btn-result secondary" onclick="restartQuiz()">Tentar Novamente</button>
+      <button class="btn-result primary" onclick="showScreen('home')">Voltar ao Início</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PROFESSOR PANEL ===================== -->
+<div id="screen-professor" class="screen">
+  <nav class="navbar">
+    <div class="nav-logo"><span class="nav-logo-icon">🎮</span> EduQuest</div>
+    <span class="nav-role-badge professor">Professor</span>
+    <div class="nav-links">
+      <button class="nav-link active" onclick="showScreen('professor')">📊 Painel</button>
+      <button class="nav-link" onclick="showScreen('prof-nova-questao')">➕ Nova Questão</button>
+      <button class="nav-link">📋 Minhas Avaliações</button>
+      <button class="nav-link">👥 Turmas</button>
+    </div>
+    <div class="nav-right">
+      <div class="nav-avatar prof" onclick="toggleDropdown()">👩‍🏫</div>
+      <button class="nav-menu-btn" onclick="toggleDropdown()">⋮</button>
+    </div>
+  </nav>
+
+  <div class="prof-content">
+    <div class="panel-header">
+      <h2>Painel Pedagógico</h2>
+      <p>Gerencie avaliações, questões e acompanhe o progresso das suas turmas.</p>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon orange">📝</div>
+        <div><div class="stat-value">12</div><div class="stat-label">Questões criadas</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green">✅</div>
+        <div><div class="stat-value">3</div><div class="stat-label">Avaliações ativas</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon blue">👥</div>
+        <div><div class="stat-value">48</div><div class="stat-label">Alunos nas turmas</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon red">⚠️</div>
+        <div><div class="stat-value">5</div><div class="stat-label">Alunos com dificuldade</div></div>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+
+      <!-- Questões recentes -->
+      <div class="section-card">
+        <div class="section-card-header">
+          <div class="section-card-title">📝 Questões Recentes</div>
+          <button class="btn-primary" onclick="showScreen('prof-nova-questao')">+ Nova</button>
+        </div>
+        <table class="data-table">
+          <thead><tr><th>Enunciado</th><th>Dificuldade</th><th>Ações</th></tr></thead>
+          <tbody id="prof-questions-tbody">
+            <tr><td>Qual conceito de POO descreve o reuso de código validado...?</td><td><span class="diff-badge easy">Fácil</span></td><td><button class="action-btn" title="Editar">✏️</button><button class="action-btn" title="Excluir">🗑️</button></td></tr>
+            <tr><td>Sobre os processos iterativos do RUP, analise as asserções...</td><td><span class="diff-badge easy">Fácil</span></td><td><button class="action-btn" title="Editar">✏️</button><button class="action-btn" title="Excluir">🗑️</button></td></tr>
+            <tr><td>No padrão MVC, qual componente é responsável pela lógica...</td><td><span class="diff-badge medium">Médio</span></td><td><button class="action-btn" title="Editar">✏️</button><button class="action-btn" title="Excluir">🗑️</button></td></tr>
+            <tr><td>Análise as afirmativas sobre fatores de qualidade ISO 9126...</td><td><span class="diff-badge hard">Difícil</span></td><td><button class="action-btn" title="Editar">✏️</button><button class="action-btn" title="Excluir">🗑️</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Progresso das turmas -->
+      <div class="section-card">
+        <div class="section-card-header">
+          <div class="section-card-title">📈 Progresso das Turmas</div>
+          <button class="btn-secondary">Ver Tudo</button>
+        </div>
+        <div class="turma-grid">
+          <div class="turma-card">
+            <div class="turma-name">ADS 2024 — Turma A</div>
+            <div class="turma-meta">22 alunos · Nível Fácil</div>
+            <div class="turma-prog-label"><span>Progresso médio</span><span>68%</span></div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill green" style="width:68%"></div></div>
+          </div>
+          <div class="turma-card">
+            <div class="turma-name">ADS 2024 — Turma B</div>
+            <div class="turma-meta">26 alunos · Nível Fácil</div>
+            <div class="turma-prog-label"><span>Progresso médio</span><span>45%</span></div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill yellow" style="width:45%"></div></div>
+          </div>
+          <div class="turma-card">
+            <div class="turma-name">ADS 2023 — Turma A</div>
+            <div class="turma-meta">18 alunos · Nível Médio</div>
+            <div class="turma-prog-label"><span>Progresso médio</span><span>82%</span></div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill green" style="width:82%"></div></div>
+          </div>
+          <div class="turma-card">
+            <div class="turma-name">ADS 2023 — Turma B</div>
+            <div class="turma-meta">20 alunos · Nível Difícil</div>
+            <div class="turma-prog-label"><span>Progresso médio</span><span>31%</span></div>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill red" style="width:31%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alertas pedagógicos -->
+    <div class="section-card" style="margin-top:20px;">
+      <div class="section-card-header">
+        <div class="section-card-title">🚨 Alertas Pedagógicos</div>
+        <span style="font-size:13px;color:#999;">Alunos que precisam de atenção</span>
+      </div>
+      <div class="alert-list">
+        <div class="alert-item danger"><span class="alert-icon">📉</span><div class="alert-text"><span class="alert-name">Lucas Ferreira</span> — menos de 30% de aproveitamento no Nível Fácil. Recomendado: revisão de conteúdo.</div></div>
+        <div class="alert-item warn"><span class="alert-icon">⏰</span><div class="alert-text"><span class="alert-name">Ana Rodrigues</span> — não acessa a plataforma há 7 dias.</div></div>
+        <div class="alert-item warn"><span class="alert-icon">⚡</span><div class="alert-text"><span class="alert-name">Pedro Mendes</span> — tempo médio por questão acima do esperado (>5 min).</div></div>
+        <div class="alert-item info"><span class="alert-icon">🌟</span><div class="alert-text"><span class="alert-name">Carla Santos</span> — 100% de acertos no Nível Fácil. Pronta para avançar.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== NOVA QUESTÃO ===================== -->
+<div id="screen-prof-nova-questao" class="screen">
+  <nav class="navbar">
+    <div class="nav-logo"><span class="nav-logo-icon">🎮</span> EduQuest</div>
+    <span class="nav-role-badge professor">Professor</span>
+    <div class="nav-links">
+      <button class="nav-link" onclick="showScreen('professor')">📊 Painel</button>
+      <button class="nav-link active" onclick="showScreen('prof-nova-questao')">➕ Nova Questão</button>
+      <button class="nav-link">📋 Minhas Avaliações</button>
+    </div>
+    <div class="nav-right">
+      <div class="nav-avatar prof">👩‍🏫</div>
+      <button class="nav-menu-btn" onclick="toggleDropdown()">⋮</button>
+    </div>
+  </nav>
+
+  <div class="prof-content">
+    <div class="panel-header">
+      <h2>Cadastrar Nova Questão</h2>
+      <p>Preencha todos os campos abaixo. A questão ficará disponível para uso nas avaliações.</p>
+    </div>
+    <div class="form-card">
+      <div class="form-field">
+        <label class="form-label">Enunciado da Questão <span style="color:var(--red)">*</span></label>
+        <textarea class="form-textarea" id="new-q-text" placeholder="Digite o enunciado completo da questão..."></textarea>
+      </div>
+
+      <div class="form-field">
+        <label class="form-label">Nível de Dificuldade <span style="color:var(--red)">*</span></label>
+        <div class="difficulty-selector">
+          <button class="diff-opt selected-easy" id="diff-easy" onclick="selectDiff('easy')">🟢 Fácil</button>
+          <button class="diff-opt" id="diff-medium" onclick="selectDiff('medium')">🟡 Médio</button>
+          <button class="diff-opt" id="diff-hard" onclick="selectDiff('hard')">🔴 Difícil</button>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label class="form-label">Alternativas <span style="color:var(--red)">*</span> <span style="font-size:12px;color:#999;font-weight:400;">(clique no círculo para marcar a correta)</span></label>
+        <div class="answer-options-list" id="answer-options">
+          <div class="answer-option-row">
+            <div class="answer-option-radio" onclick="setCorrect(0)" id="radio-0"></div>
+            <input class="form-input answer-option-input" type="text" placeholder="Alternativa A">
+          </div>
+          <div class="answer-option-row">
+            <div class="answer-option-radio" onclick="setCorrect(1)" id="radio-1"></div>
+            <input class="form-input answer-option-input" type="text" placeholder="Alternativa B">
+          </div>
+          <div class="answer-option-row">
+            <div class="answer-option-radio" onclick="setCorrect(2)" id="radio-2"></div>
+            <input class="form-input answer-option-input" type="text" placeholder="Alternativa C">
+          </div>
+          <div class="answer-option-row">
+            <div class="answer-option-radio" onclick="setCorrect(3)" id="radio-3"></div>
+            <input class="form-input answer-option-input" type="text" placeholder="Alternativa D">
+          </div>
+          <div class="answer-option-row">
+            <div class="answer-option-radio" onclick="setCorrect(4)" id="radio-4"></div>
+            <input class="form-input answer-option-input" type="text" placeholder="Alternativa E (opcional)">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label class="form-label">Explicação / Feedback Pedagógico</label>
+        <textarea class="form-textarea" id="new-q-explanation" placeholder="Explique por que a resposta está correta e esclareça as incorretas..."></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-secondary" onclick="showScreen('professor')">Cancelar</button>
+        <button class="btn-primary" onclick="saveQuestion()">✓ Salvar Questão</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== ADMIN PANEL ===================== -->
+<div id="screen-admin" class="screen">
+  <nav class="navbar">
+    <div class="nav-logo"><span class="nav-logo-icon">🎮</span> EduQuest</div>
+    <span class="nav-role-badge admin">Admin</span>
+    <div class="nav-right" style="margin-left:auto;">
+      <span style="font-size:13px;color:rgba(255,255,255,0.5);">Sistema v1.0.0</span>
+      <div class="nav-avatar adm" onclick="toggleDropdown()">🛡️</div>
+      <button class="nav-menu-btn" onclick="toggleDropdown()">⋮</button>
+    </div>
+  </nav>
+
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-section-label">Geral</div>
+      <button class="sidebar-item active" onclick="showAdminSection('dashboard', this)"><span class="sidebar-item-icon">📊</span> Dashboard</button>
+      <button class="sidebar-item" onclick="showAdminSection('users', this)"><span class="sidebar-item-icon">👥</span> Usuários</button>
+      <button class="sidebar-item" onclick="showAdminSection('logs', this)"><span class="sidebar-item-icon">📋</span> Logs de Atividade</button>
+
+      <div class="sidebar-section-label">Controle</div>
+      <button class="sidebar-item" onclick="showAdminSection('access', this)"><span class="sidebar-item-icon">🔐</span> Controle de Acesso</button>
+      <button class="sidebar-item" onclick="showAdminSection('faq', this)"><span class="sidebar-item-icon">❓</span> FAQ / Suporte</button>
+
+      <div style="margin-top:auto; padding:24px;">
+        <button class="btn-secondary" style="width:100%; text-align:center;" onclick="showScreen('login')">🚪 Sair</button>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="admin-main">
+
+      <!-- Dashboard section -->
+      <div class="admin-section active" id="admin-section-dashboard">
+        <div class="panel-header" style="color:white;">
+          <h2 style="color:white;">Visão Geral do Sistema</h2>
+          <p style="color:rgba(255,255,255,0.5);">Monitoramento em tempo real da plataforma EduQuest.</p>
+        </div>
+
+        <div class="admin-stats">
+          <div class="admin-stat">
+            <div class="admin-stat-label">Total de Usuários</div>
+            <div class="admin-stat-value purple">74</div>
+            <div class="admin-stat-sub">+3 esta semana</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-label">Usuários Ativos</div>
+            <div class="admin-stat-value green">61</div>
+            <div class="admin-stat-sub">82% do total</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-label">Avaliações Realizadas</div>
+            <div class="admin-stat-value yellow">128</div>
+            <div class="admin-stat-sub">Este mês</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-label">Usuários Inativos</div>
+            <div class="admin-stat-value red">13</div>
+            <div class="admin-stat-sub">Soft delete ativo</div>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div class="admin-card-title">👥 Distribuição de Perfis</div>
+            </div>
+            <table class="admin-table">
+              <thead><tr><th>Perfil</th><th>Total</th><th>Ativos</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>🎓 Alunos</td><td>68</td><td>56</td><td><span class="status-badge active">Normal</span></td></tr>
+                <tr><td>👩‍🏫 Professores</td><td>5</td><td>4</td><td><span class="status-badge active">Normal</span></td></tr>
+                <tr><td>🛡️ Administradores</td><td>1</td><td>1</td><td><span class="status-badge active">Normal</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <div class="admin-card-title">⚡ Atividade Recente</div>
+            </div>
+            <div class="log-list">
+              <div class="log-item"><div class="log-dot green"></div>Lucas Ferreira completou Nível Fácil<span class="log-time">há 2 min</span></div>
+              <div class="log-item"><div class="log-dot blue"></div>Prof. Ana criou nova questão<span class="log-time">há 15 min</span></div>
+              <div class="log-item"><div class="log-dot yellow"></div>3 novos alunos cadastrados<span class="log-time">há 1h</span></div>
+              <div class="log-item"><div class="log-dot red"></div>Conta de João Silva desativada<span class="log-time">há 2h</span></div>
+              <div class="log-item"><div class="log-dot green"></div>Avaliação "POO Básico" publicada<span class="log-time">hoje, 9:14</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Users section -->
+      <div class="admin-section" id="admin-section-users">
+        <div class="panel-header">
+          <h2 style="color:white;">Gerenciamento de Usuários</h2>
+          <p style="color:rgba(255,255,255,0.5);">CRUD completo — crie, visualize, edite e desative contas.</p>
+        </div>
+
+        <div style="display:flex; gap:12px; align-items:center; margin-bottom:20px; flex-wrap:wrap;">
+          <div class="search-bar" style="margin-bottom:0;">
+            <span>🔍</span>
+            <input type="text" placeholder="Buscar por nome ou e-mail..." id="user-search" oninput="filterUsers()">
+          </div>
+          <button class="btn-primary" onclick="openModal('modal-add-user')">+ Novo Usuário</button>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div class="admin-card-title">👥 Lista de Usuários</div>
+            <span style="font-size:13px;color:rgba(255,255,255,0.4);" id="user-count">74 usuários</span>
+          </div>
+          <table class="admin-table" id="users-table">
+            <thead><tr><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Status</th><th>Cadastro</th><th>Ações</th></tr></thead>
+            <tbody id="users-tbody">
+              <tr><td>Pedro Vítor</td><td>pedro@escola.edu.br</td><td><span class="role-tag aluno">Aluno</span></td><td><span class="status-badge active">Ativo</span></td><td>01/03/2026</td><td><button class="admin-action-btn">✏️ Editar</button><button class="admin-action-btn danger" onclick="toggleUserStatus(this)">🔒 Desativar</button></td></tr>
+              <tr><td>Bruno Luis</td><td>bruno@escola.edu.br</td><td><span class="role-tag aluno">Aluno</span></td><td><span class="status-badge active">Ativo</span></td><td>01/03/2026</td><td><button class="admin-action-btn">✏️ Editar</button><button class="admin-action-btn danger" onclick="toggleUserStatus(this)">🔒 Desativar</button></td></tr>
+              <tr><td>Michely Archetti</td><td>michely@escola.edu.br</td><td><span class="role-tag aluno">Aluno</span></td><td><span class="status-badge active">Ativo</span></td><td>01/03/2026</td><td><button class="admin-action-btn">✏️ Editar</button><button class="admin-action-btn danger" onclick="toggleUserStatus(this)">🔒 Desativar</button></td></tr>
+              <tr><td>Danilo Vaz</td><td>danilo@escola.edu.br</td><td><span class="role-tag aluno">Aluno</span></td><td><span class="status-badge active">Ativo</span></td><td>01/03/2026</td><td><button class="admin-action-btn">✏️ Editar</button><button class="admin-action-btn danger" onclick="toggleUserStatus(this)">🔒 Desativar</button></td></tr>
+              <tr><td>Profa. Ana Lima</td><td>ana.lima@escola.edu.br</td><td><span class="role-tag professor">Professor</span></td><td><span class="status-badge active">Ativo</span></td><td>15/01/2026</td><td><button class="admin-action-btn">✏️ Editar</button><button class="admin-action-btn danger" onclick="toggleUserStatus(this)">🔒 Desativar</button></td></tr>
+              <tr><td>Prof. Carlos Mendes</td><td>carlos@escola.edu.br</td><td><span class="role-tag professor">Professor</span></td><td><span class="status-badge active">Ativo</span></td><td>15/01/2026</td><td><button class="admin-action-btn">✏️ Editar</button><button class="admin-action-btn danger" onclick="toggleUserStatus(this)">🔒 Desativar</button></td></tr>
+              <tr><td>João Silva</td><td>joao@escola.edu.br</td><td><span class="role-tag aluno">Aluno</span></td><td><span class="status-badge inactive">Inativo</span></td><td>10/02/2026</td><td><button class="admin-action-btn">✏️ Editar</button><button class="admin-action-btn" onclick="toggleUserStatus(this)" style="color:var(--green)">🔓 Ativar</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Logs section -->
+      <div class="admin-section" id="admin-section-logs">
+        <div class="panel-header">
+          <h2 style="color:white;">Logs de Atividade</h2>
+          <p style="color:rgba(255,255,255,0.5);">Auditoria completa. Nenhum evento é apagado (Soft Delete / Não-Repúdio).</p>
+        </div>
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div class="admin-card-title">📋 Registro de Eventos</div>
+            <button class="btn-secondary" style="font-size:13px;padding:8px 18px;">⬇️ Exportar CSV</button>
+          </div>
+          <div class="log-list">
+            <div class="log-item"><div class="log-dot green"></div><strong style="color:white;">LOGIN</strong> — Lucas Ferreira entrou no sistema<span class="log-time">31/05/2026 14:32</span></div>
+            <div class="log-item"><div class="log-dot blue"></div><strong style="color:white;">CREATE</strong> — Profa. Ana criou questão #13<span class="log-time">31/05/2026 14:15</span></div>
+            <div class="log-item"><div class="log-dot green"></div><strong style="color:white;">QUIZ</strong> — Pedro Vítor completou Avaliação "POO Básico" (80%)<span class="log-time">31/05/2026 13:58</span></div>
+            <div class="log-item"><div class="log-dot yellow"></div><strong style="color:white;">UPDATE</strong> — Admin atualizou cadastro de Bruno Luis<span class="log-time">31/05/2026 11:20</span></div>
+            <div class="log-item"><div class="log-dot red"></div><strong style="color:white;">DEACTIVATE</strong> — Admin desativou conta de João Silva (isAtivo=false)<span class="log-time">31/05/2026 10:04</span></div>
+            <div class="log-item"><div class="log-dot blue"></div><strong style="color:white;">CREATE</strong> — Admin criou conta de Carlos Mendes (Professor)<span class="log-time">30/05/2026 16:45</span></div>
+            <div class="log-item"><div class="log-dot green"></div><strong style="color:white;">LOGIN</strong> — Michely Archetti entrou no sistema<span class="log-time">30/05/2026 15:30</span></div>
+            <div class="log-item"><div class="log-dot yellow"></div><strong style="color:white;">QUIZ</strong> — Danilo Vaz iniciou Avaliação "Eng. Software II"<span class="log-time">30/05/2026 14:00</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Access control section -->
+      <div class="admin-section" id="admin-section-access">
+        <div class="panel-header">
+          <h2 style="color:white;">Controle de Acesso</h2>
+          <p style="color:rgba(255,255,255,0.5);">Princípio do Menor Privilégio e Separação de Funções (SoD).</p>
+        </div>
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div class="admin-card-title">🔐 Matriz de Permissões</div>
+          </div>
+          <table class="admin-table">
+            <thead><tr><th>Funcionalidade</th><th>🎓 Aluno</th><th>👩‍🏫 Professor</th><th>🛡️ Admin</th></tr></thead>
+            <tbody>
+              <tr><td>Fazer login</td><td>✅</td><td>✅</td><td>✅</td></tr>
+              <tr><td>Criar própria conta</td><td>❌</td><td>❌</td><td>✅ Exclusivo</td></tr>
+              <tr><td>Realizar avaliações</td><td>✅</td><td>❌</td><td>❌</td></tr>
+              <tr><td>Consultar devolutivas</td><td>✅</td><td>❌</td><td>❌</td></tr>
+              <tr><td>Criar avaliações</td><td>❌</td><td>✅</td><td>❌</td></tr>
+              <tr><td>Corrigir avaliações</td><td>❌</td><td>✅</td><td>❌</td></tr>
+              <tr><td>Criar questões</td><td>❌</td><td>✅</td><td>❌</td></tr>
+              <tr><td>Ver progresso de turmas</td><td>❌</td><td>✅</td><td>✅</td></tr>
+              <tr><td>Gerenciar usuários (CRUD)</td><td>❌</td><td>❌</td><td>✅ Exclusivo</td></tr>
+              <tr><td>Desativar contas (Soft Delete)</td><td>❌</td><td>❌</td><td>✅ Exclusivo</td></tr>
+              <tr><td>Visualizar logs de auditoria</td><td>❌</td><td>❌</td><td>✅ Exclusivo</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- FAQ section -->
+      <div class="admin-section" id="admin-section-faq">
+        <div class="panel-header">
+          <h2 style="color:white;">Gerenciar FAQ / Suporte</h2>
+          <p style="color:rgba(255,255,255,0.5);">Seção de Dúvidas Frequentes mantida pelos Moderadores.</p>
+        </div>
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div class="admin-card-title">❓ Perguntas Frequentes</div>
+            <button class="btn-primary">+ Nova Pergunta</button>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div style="border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:16px;">
+              <div style="color:white;font-weight:700;margin-bottom:6px;">Como redefinir minha senha?</div>
+              <div style="color:rgba(255,255,255,0.5);font-size:13px;line-height:1.6;">Apenas o Administrador pode redefinir senhas. Entre em contato com o suporte da sua instituição.</div>
+              <div style="margin-top:10px;display:flex;gap:8px;"><button class="admin-action-btn">✏️</button><button class="admin-action-btn danger">🗑️</button></div>
+            </div>
+            <div style="border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:16px;">
+              <div style="color:white;font-weight:700;margin-bottom:6px;">Por que não consigo criar minha própria conta?</div>
+              <div style="color:rgba(255,255,255,0.5);font-size:13px;line-height:1.6;">Por segurança, contas são criadas exclusivamente pelo Administrador. Isso previne elevação de privilégios.</div>
+              <div style="margin-top:10px;display:flex;gap:8px;"><button class="admin-action-btn">✏️</button><button class="admin-action-btn danger">🗑️</button></div>
+            </div>
+            <div style="border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:16px;">
+              <div style="color:white;font-weight:700;margin-bottom:6px;">Como faço para avançar de nível?</div>
+              <div style="color:rgba(255,255,255,0.5);font-size:13px;line-height:1.6;">Complete todas as questões do nível atual. O próximo nível será liberado automaticamente.</div>
+              <div style="margin-top:10px;display:flex;gap:8px;"><button class="admin-action-btn">✏️</button><button class="admin-action-btn danger">🗑️</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ===== VLibras Widget ===== -->
+<div vw class="enabled">
+  <div vw-access-button class="active"></div>
+  <div vw-plugin-wrapper>
+    <div class="vw-plugin-top-wrapper"></div>
+  </div>
+</div>
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+<script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
+
+<script>
+// ==================== DATA ====================
+const questions = [
+  {
+    id: 1,
+    text: `Um analista foi contratado para desenvolver um sistema de pesquisa de DVDs em lojas virtuais. O sistema deverá solicitar ao usuário um título de DVD, que será usado para realizar a pesquisa nas bases de dados das lojas conveniadas.\n\nCom relação ao modelo de ciclo de vida, qual afirmativa está CORRETA?`,
+    options: [
+      "A execução sequencial das fases sem retorno produz um sistema que pode ser validado pelo contratante em qualquer etapa.",
+      "A elaboração do protótipo pode aumentar riscos de inclusão de funcionalidades não prioritárias.",
+      "A definição das restrições deve ser a segunda fase a ser realizada no projeto, na etapa de engenharia.",
+      "Um processo iterativo permite versões progressivas mais completas do sistema."
+    ],
+    correct: [1, 3],
+    multipleCorrect: true,
+    explanation: "O protótipo facilita a resolução de dúvidas mas abre espaço para novas funcionalidades (II correto). O processo iterativo permite versões incrementais e progressivamente mais completas (IV correto).",
+    level: 'easy'
+  },
+  {
+    id: 2,
+    text: `Uma pizzaria ampliou suas instalações e contratou uma empresa para melhorar o sistema informatizado. No desenvolvimento, a empresa aproveitou partes do sistema antigo e estendeu os componentes, reaproveitando código já validado e acrescentando novas funções.\n\nQual conceito de orientação a objetos está descrito?`,
+    options: ["Sobrecarga","Herança","Sobreposição","Abstração"],
+    correct: [1],
+    multipleCorrect: false,
+    explanation: "A herança aproveita tudo que foi desenvolvido e aprovado na superclasse, possibilitando o uso nas subclasses como código já testado e validado.",
+    level: 'easy'
+  },
+  {
+    id: 3,
+    text: `O Rational Unified Process (RUP) é um processo de engenharia de software iterativo e incremental. Com base na iteração do RUP, analise as asserções:\n\nI. A cada iteração das fases do RUP, geram-se ou não artefatos de software.\nPORQUE\nII. Os artefatos produzidos dependem da ênfase que é dada a cada disciplina.\n\nAssinale a opção correta:`,
+    options: [
+      "As duas asserções são verdadeiras, e a segunda justifica a primeira.",
+      "As duas asserções são verdadeiras, e a segunda NÃO justifica a primeira.",
+      "A primeira asserção é verdadeira e a segunda é falsa.",
+      "A primeira asserção é falsa e a segunda é verdadeira."
+    ],
+    correct: [3],
+    multipleCorrect: false,
+    explanation: "A asserção I é FALSA: a cada iteração, geram-se vários artefatos obrigatoriamente. A asserção II é VERDADEIRA: cada artefato é escolhido em função da ênfase/peso de cada disciplina.",
+    level: 'easy'
+  },
+  {
+    id: 4,
+    text: `Os alunos deveriam escolher um sistema para modelagem. Um grupo estabeleceu a seguinte estratégia: criaram nicknames em um chat, reuniram-se online, cada integrante sugeriu sistemas sem criticar os outros, o líder copiava as ideias para um editor de texto e, ao final, as 5 melhores ideias foram colocadas em votação.\n\nEsta estratégia é uma adaptação de qual técnica de levantamento de requisitos?`,
+    options: ["JAD (Joint Application Design)","PIECES","FAST (Facilitated Application Specification Technique)","Entrevista","Brainstorming"],
+    correct: [4],
+    multipleCorrect: false,
+    explanation: "A técnica é Brainstorming: proibição de críticas, documentação posterior, votação das melhores ideias.",
+    level: 'easy'
+  },
+  {
+    id: 5,
+    text: `Uma indústria de alimentos tem um sistema para classificar sementes por cor e um mecanismo robótico para separação em lotes. O mecanismo foi substituído com sucesso por um equipamento de outra marca.\n\nAnalise as afirmativas sobre fatores de qualidade:\nI. As operações de classificação e separação não podem falhar — o atributo correspondente é a interoperabilidade.\nII. A fácil substituição do robô por outra marca indica que o sistema é portável.\nIII. A interface gráfica do controle robótico deve contemplar ergonomia — fator de usabilidade.\n\nQuantas afirmativas estão corretas?`,
+    options: [
+      "Apenas a afirmativa III está correta.",
+      "Apenas as afirmativas I e II estão corretas.",
+      "Apenas as afirmativas I e III estão corretas.",
+      "Apenas as afirmativas II e III estão corretas.",
+      "Todas as afirmativas estão corretas."
+    ],
+    correct: [0],
+    multipleCorrect: false,
+    explanation: "I errada: confiabilidade (não interoperabilidade). II errada: substituição de marca é interoperabilidade (não portabilidade). III correta: ergonomia → usabilidade.",
+    level: 'easy'
+  }
+];
+
+// ==================== STATE ====================
+let currentScreen = 'login';
+let currentLevel = 'easy';
+let currentQuestion = 0;
+let selectedOptions = {};
+let answeredQuestions = {};
+let selectedRole = 'aluno';
+let selectedDiff = 'easy';
+let correctAnswerIdx = -1;
+
+// ==================== NAVIGATION ====================
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('screen-' + name);
+  if (el) el.classList.add('active');
+  currentScreen = name;
+  window.scrollTo(0, 0);
+}
+
+function toggleDropdown() { document.getElementById('dropdown-overlay').classList.toggle('open'); }
+function closeDropdown()  { document.getElementById('dropdown-overlay').classList.remove('open'); }
+function openModal(id)    { document.getElementById(id).classList.add('open'); }
+function closeModal(id)   { document.getElementById(id).classList.remove('open'); }
+function togglePw() {
+  const pw = document.getElementById('login-pw');
+  pw.type = pw.type === 'password' ? 'text' : 'password';
+}
+
+// ==================== LOGIN ====================
+function selectRole(role, btn) {
+  selectedRole = role;
+  document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const labels = { aluno: 'Acesso: Estudante', professor: 'Acesso: Professor', admin: 'Acesso: Administrador' };
+  document.getElementById('login-role-indicator').textContent = labels[role];
+}
+
+function doLogin() {
+  if (selectedRole === 'professor') showScreen('professor');
+  else if (selectedRole === 'admin') showScreen('admin');
+  else showScreen('home');
+}
+
+// ==================== QUIZ ====================
+function startLevel(level) {
+  currentLevel = level;
+  currentQuestion = 0;
+  selectedOptions = {};
+  answeredQuestions = {};
+  const badges = { easy: 'Nível Fácil', medium: 'Nível Médio', hard: 'Nível Difícil' };
+  const badge = document.getElementById('level-badge-display');
+  badge.textContent = badges[level];
+  badge.className = 'level-badge ' + level;
+  showScreen('quiz');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = questions[currentQuestion];
+  if (!q) return;
+  document.getElementById('q-current').textContent = currentQuestion + 1;
+  document.getElementById('q-total').textContent = questions.length;
+  document.getElementById('q-text').innerHTML = q.text.replace(/\n/g, '<br>');
+
+  const optContainer = document.getElementById('q-options');
+  optContainer.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const div = document.createElement('div');
+    const isAnswered = answeredQuestions[currentQuestion] !== undefined;
+    const isSelected = selectedOptions[currentQuestion] !== undefined &&
+      (Array.isArray(selectedOptions[currentQuestion])
+        ? selectedOptions[currentQuestion].includes(i)
+        : selectedOptions[currentQuestion] === i);
+    const isCorrect = q.correct.includes(i);
+
+    let cls = 'option-item';
+    if (isAnswered) {
+      if (isCorrect) cls += ' correct';
+      else if (isSelected && !isCorrect) cls += ' wrong';
+    } else if (isSelected) {
+      cls += ' selected';
+    }
+
+    div.className = cls;
+    div.innerHTML = `<div class="option-radio ${isSelected ? 'filled' : ''}"></div><span class="option-text">${opt}</span>`;
+    if (!isAnswered) div.onclick = () => selectOption(i);
+    optContainer.appendChild(div);
+  });
+
+  const fb = document.getElementById('feedback-box');
+  if (answeredQuestions[currentQuestion] !== undefined) {
+    fb.className = 'feedback-box show ' + (answeredQuestions[currentQuestion] ? 'correct' : 'wrong');
+    fb.innerHTML = (answeredQuestions[currentQuestion] ? '<strong>✅ Correto!</strong><br>' : '<strong>❌ Incorreto!</strong><br>') + q.explanation;
+  } else {
+    fb.className = 'feedback-box';
+    fb.innerHTML = '';
+  }
+}
+
+function selectOption(idx) {
+  const q = questions[currentQuestion];
+  if (answeredQuestions[currentQuestion] !== undefined) return;
+  selectedOptions[currentQuestion] = idx;
+  answeredQuestions[currentQuestion] = q.correct.includes(idx);
+  renderQuestion();
+}
+
+function nextQuestion() {
+  if (currentQuestion < questions.length - 1) { currentQuestion++; renderQuestion(); }
+  else showResult();
+}
+
+function prevQuestion() {
+  if (currentQuestion > 0) { currentQuestion--; renderQuestion(); }
+}
+
+function discardTwo() {
+  const q = questions[currentQuestion];
+  if (answeredQuestions[currentQuestion] !== undefined) return;
+  const wrongOpts = q.options.map((_,i)=>i).filter(i=>!q.correct.includes(i));
+  const toRemove = wrongOpts.sort(()=>Math.random()-0.5).slice(0,2);
+  const items = document.querySelectorAll('.option-item');
+  toRemove.forEach(i => {
+    if (items[i]) {
+      items[i].style.opacity = '0.3';
+      items[i].style.pointerEvents = 'none';
+      items[i].style.textDecoration = 'line-through';
+    }
+  });
+}
+
+function skipQuestion() { answeredQuestions[currentQuestion] = false; nextQuestion(); }
+
+function showResult() {
+  const total = questions.length;
+  const correct = Object.values(answeredQuestions).filter(v=>v===true).length;
+  const pct = Math.round((correct/total)*100);
+  document.getElementById('result-score').textContent = correct + '/' + total;
+  document.getElementById('result-sub').textContent = `Você acertou ${pct}% das questões!`;
+  if (pct >= 80) { document.getElementById('result-icon').textContent = '🎉'; document.getElementById('result-title').textContent = 'Excelente resultado!'; }
+  else if (pct >= 60) { document.getElementById('result-icon').textContent = '👍'; document.getElementById('result-title').textContent = 'Bom trabalho!'; }
+  else { document.getElementById('result-icon').textContent = '📚'; document.getElementById('result-title').textContent = 'Continue praticando!'; }
+  showScreen('result');
+}
+
+function restartQuiz() { startLevel(currentLevel); }
+
+// ==================== PROFESSOR ====================
+function selectDiff(d) {
+  selectedDiff = d;
+  ['easy','medium','hard'].forEach(x => {
+    const el = document.getElementById('diff-'+x);
+    el.className = 'diff-opt' + (x===d ? ' selected-'+x : '');
+  });
+}
+
+function setCorrect(idx) {
+  correctAnswerIdx = idx;
+  for (let i=0; i<5; i++) {
+    const r = document.getElementById('radio-'+i);
+    if (r) r.className = 'answer-option-radio' + (i===idx ? ' correct-answer' : '');
+  }
+}
+
+function saveQuestion() {
+  const text = document.getElementById('new-q-text').value.trim();
+  if (!text) { showToast('⚠️ Preencha o enunciado da questão!'); return; }
+  if (correctAnswerIdx < 0) { showToast('⚠️ Marque a alternativa correta!'); return; }
+
+  const tbody = document.getElementById('prof-questions-tbody');
+  const diffLabels = { easy:'Fácil', medium:'Médio', hard:'Difícil' };
+  const row = document.createElement('tr');
+  row.innerHTML = `<td>${text.substring(0,55)}...?</td><td><span class="diff-badge ${selectedDiff}">${diffLabels[selectedDiff]}</span></td><td><button class="action-btn">✏️</button><button class="action-btn">🗑️</button></td>`;
+  tbody.insertBefore(row, tbody.firstChild);
+
+  document.getElementById('new-q-text').value = '';
+  document.getElementById('new-q-explanation').value = '';
+  correctAnswerIdx = -1;
+  for (let i=0; i<5; i++) {
+    const r = document.getElementById('radio-'+i);
+    if (r) r.className = 'answer-option-radio';
+  }
+  document.querySelectorAll('.answer-option-input').forEach(el => el.value='');
+
+  showToast('✅ Questão salva com sucesso!');
+  setTimeout(() => showScreen('professor'), 1200);
+}
+
+// ==================== ADMIN ====================
+function showAdminSection(name, btn) {
+  document.querySelectorAll('.admin-section').forEach(s=>s.classList.remove('active'));
+  const el = document.getElementById('admin-section-'+name);
+  if (el) el.classList.add('active');
+  document.querySelectorAll('.sidebar-item').forEach(b=>b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+
+function addUser() {
+  const name  = document.getElementById('new-user-name').value.trim();
+  const email = document.getElementById('new-user-email').value.trim();
+  const role  = document.getElementById('new-user-role').value;
+  const pw    = document.getElementById('new-user-pw').value;
+
+  if (!name||!email||!pw) { showToast('⚠️ Preencha todos os campos!'); return; }
+
+  const roleLabels = { aluno:'aluno', professor:'professor', admin:'admin' };
+  const tbody = document.getElementById('users-tbody');
+  const row = document.createElement('tr');
+  const today = new Date().toLocaleDateString('pt-BR');
+  row.innerHTML = `<td>${name}</td><td>${email}</td><td><span class="role-tag ${role}">${role.charAt(0).toUpperCase()+role.slice(1)}</span></td><td><span class="status-badge active">Ativo</span></td><td>${today}</td><td><button class="admin-action-btn">✏️ Editar</button><button class="admin-action-btn danger" onclick="toggleUserStatus(this)">🔒 Desativar</button></td>`;
+  tbody.insertBefore(row, tbody.firstChild);
+
+  document.getElementById('new-user-name').value='';
+  document.getElementById('new-user-email').value='';
+  document.getElementById('new-user-pw').value='';
+  closeModal('modal-add-user');
+  showToast('✅ Usuário criado com sucesso!');
+}
+
+function toggleUserStatus(btn) {
+  const row = btn.closest('tr');
+  const badge = row.querySelector('.status-badge');
+  const isActive = badge.classList.contains('active');
+  if (isActive) {
+    badge.className = 'status-badge inactive';
+    badge.textContent = 'Inativo';
+    btn.textContent = '🔓 Ativar';
+    btn.style.color = 'var(--green)';
+    btn.classList.remove('danger');
+    showToast('🔒 Conta desativada (Soft Delete)');
+  } else {
+    badge.className = 'status-badge active';
+    badge.textContent = 'Ativo';
+    btn.textContent = '🔒 Desativar';
+    btn.style.color = '';
+    btn.classList.add('danger');
+    showToast('🔓 Conta reativada com sucesso!');
+  }
+}
+
+function filterUsers() {
+  const q = document.getElementById('user-search').value.toLowerCase();
+  document.querySelectorAll('#users-tbody tr').forEach(row => {
+    row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+// ==================== TOAST ====================
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// Init
+showScreen('login');
+</script>
+</body>
+</html>

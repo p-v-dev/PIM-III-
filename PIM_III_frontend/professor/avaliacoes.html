@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduQuest — Minhas Avaliações</title>
+<link rel="stylesheet" href="../assets/css/global.css">
+<link rel="stylesheet" href="../assets/css/professor.css">
+</head>
+<body>
+<div id="screen-avaliacoes" class="screen active">
+  <nav class="navbar">
+    <div class="nav-logo"><span class="nav-logo-icon">🎮</span> EduQuest</div>
+    <span class="nav-role-badge professor">Professor</span>
+    <div class="nav-links">
+      <button class="nav-link" onclick="goToPainel()">📊 Painel</button>
+      <button class="nav-link" onclick="goToNovaQuestao()">➕ Nova Questão</button>
+      <button class="nav-link active">📋 Minhas Avaliações</button>
+      <button class="nav-link">👥 Turmas</button>
+    </div>
+    <div class="nav-right">
+      <div class="nav-avatar prof" onclick="toggleDropdown()">👩‍🏫</div>
+      <button class="nav-menu-btn" onclick="toggleDropdown()">⋮</button>
+    </div>
+  </nav>
+
+  <div class="prof-content">
+    <div class="panel-header">
+      <h2>Minhas Avaliações</h2>
+      <p>Crie, edite e gerencie avaliações para suas turmas.</p>
+    </div>
+
+    <!-- Filtros -->
+    <div style="display:flex; gap:12px; align-items:center; margin-bottom:20px; flex-wrap:wrap;">
+      <div class="search-bar" style="margin-bottom:0;">
+        <span>🔍</span>
+        <input type="text" placeholder="Buscar avaliação..." id="avaliacao-search" oninput="filterAvaliacoes()">
+      </div>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <button class="btn-secondary" onclick="setFilter('all')" id="filter-all" style="background:var(--purple-dark); color:white;">Todas</button>
+        <button class="btn-secondary" onclick="setFilter('easy')" id="filter-easy">Fácil</button>
+        <button class="btn-secondary" onclick="setFilter('medium')" id="filter-medium">Médio</button>
+        <button class="btn-secondary" onclick="setFilter('hard')" id="filter-hard">Difícil</button>
+      </div>
+      <button class="btn-primary" onclick="openModal('modal-nova-avaliacao')">+ Nova Avaliação</button>
+    </div>
+
+    <!-- Lista de Avaliações -->
+    <div class="section-card">
+      <div class="section-card-header">
+        <div class="section-card-title">📋 Lista de Avaliações</div>
+        <span style="font-size:13px;color:#999;" id="avaliacao-count">3 avaliações</span>
+      </div>
+      <table class="data-table" id="avaliacoes-table">
+        <thead><tr><th>Título</th><th>Disciplina</th><th>Dificuldade</th><th>Questões</th><th>Status</th><th>Ações</th></tr></thead>
+        <tbody id="avaliacoes-tbody">
+          <tr data-nivel="easy"><td>Avaliação POO Básico</td><td>Programação</td><td><span class="diff-badge easy">Fácil</span></td><td>5</td><td><span class="status-badge active">Ativa</span></td><td><button class="action-btn">✏️</button><button class="action-btn">🗑️</button></td></tr>
+          <tr data-nivel="medium"><td>Engenharia Software II</td><td>Eng. Software</td><td><span class="diff-badge medium">Médio</span></td><td>6</td><td><span class="status-badge active">Ativa</span></td><td><button class="action-btn">✏️</button><button class="action-btn">🗑️</button></td></tr>
+          <tr data-nivel="hard"><td>Banco de Dados Avançado</td><td>Banco de Dados</td><td><span class="diff-badge hard">Difícil</span></td><td>8</td><td><span class="status-badge inactive">Inativa</span></td><td><button class="action-btn">✏️</button><button class="action-btn">🗑️</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Nova Avaliação -->
+<div class="modal-overlay" id="modal-nova-avaliacao">
+  <div class="modal-box" onclick="event.stopPropagation()" style="max-width:560px;">
+    <h2>➕ Nova Avaliação</h2>
+    <div class="form-field" style="margin-bottom:18px;">
+      <label class="form-label">Título da Avaliação <span style="color:var(--red)">*</span></label>
+      <input class="form-input" type="text" id="avaliacao-titulo" placeholder="Ex: Avaliação POO - Herança" style="background:white;">
+    </div>
+    <div class="form-field" style="margin-bottom:18px;">
+      <label class="form-label">Disciplina <span style="color:var(--red)">*</span></label>
+      <select class="form-select" id="avaliacao-disciplina" style="background:white;">
+        <option value="">Selecione uma disciplina</option>
+        <option value="programacao">Programação</option>
+        <option value="eng-software">Engenharia de Software</option>
+        <option value="bd">Banco de Dados</option>
+        <option value="matematica">Matemática</option>
+      </select>
+    </div>
+    <div class="form-field" style="margin-bottom:18px;">
+      <label class="form-label">Nível de Dificuldade <span style="color:var(--red)">*</span></label>
+      <div class="difficulty-selector" style="margin-top:8px;">
+        <button class="diff-opt selected-easy" id="av-diff-easy" onclick="selectAvDiff('easy')">🟢 Fácil</button>
+        <button class="diff-opt" id="av-diff-medium" onclick="selectAvDiff('medium')">🟡 Médio</button>
+        <button class="diff-opt" id="av-diff-hard" onclick="selectAvDiff('hard')">🔴 Difícil</button>
+      </div>
+    </div>
+    <div class="form-field" style="margin-bottom:18px;">
+      <label class="form-label">Descrição</label>
+      <textarea class="form-textarea" id="avaliacao-descricao" placeholder="Descrição da avaliação..." style="min-height:80px;"></textarea>
+    </div>
+    <div class="form-actions">
+      <button class="btn-secondary" onclick="closeModal('modal-nova-avaliacao')">Cancelar</button>
+      <button class="btn-primary" onclick="saveAvaliacao()">✓ Salvar Avaliação</button>
+    </div>
+  </div>
+</div>
+
+<!-- Dropdown menu -->
+<div class="dropdown-overlay" id="dropdown-overlay" onclick="closeDropdown()">
+  <div class="dropdown-menu" onclick="event.stopPropagation()">
+    <button class="dropdown-item" onclick="closeDropdown()"><span class="icon">👤</span> Usuário</button>
+    <button class="dropdown-item" onclick="closeDropdown()"><span class="icon">🔔</span> Notificações</button>
+    <button class="dropdown-item danger" onclick="closeDropdown(); goToLogin()"><span class="icon">🚪</span> Sair</button>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div class="toast" id="toast">✅ Ação realizada com sucesso!</div>
+
+<script src="../assets/js/utils.js"></script>
+<script src="../assets/js/professor.js"></script>
+<script src="../assets/js/navigation.js"></script>
+<script>
+function goToPainel() { window.location.href = 'painel.html'; }
+function goToLogin() { window.location.href = '../index.html'; }
+
+// Dados mockados de avaliações
+let avaliacoesData = [];
+let currentAvFilter = 'all';
+let selectedAvDifficulty = 'easy';
+let editingAvIndex = -1;
+
+// Carregar avaliações do localStorage
+function loadAvaliacoes() {
+  const saved = localStorage.getItem('avaliacoesData');
+  if (saved) {
+    avaliacoesData = JSON.parse(saved);
+    renderAvaliacoes();
+  }
+}
+
+// Filtrar avaliações
+function setFilter(nivel) {
+  currentAvFilter = nivel;
+  document.querySelectorAll('#filter-easy, #filter-medium, #filter-hard').forEach(el => {
+    el.className = 'btn-secondary';
+  });
+  const filterAll = document.getElementById('filter-all');
+  if (nivel === 'all') {
+    filterAll.className = 'btn-secondary';
+  } else {
+    const filterEl = document.getElementById('filter-' + nivel);
+    if (filterEl) filterEl.className = 'btn-secondary';
+  }
+  renderAvaliacoes();
+}
+
+function filterAvaliacoes() {
+  renderAvaliacoes();
+}
+
+function renderAvaliacoes() {
+  const tbody = document.getElementById('avaliacoes-tbody');
+  const search = document.getElementById('avaliacao-search').value.toLowerCase();
+  
+  let filtered = avaliacoesData;
+  if (currentAvFilter !== 'all') {
+    filtered = filtered.filter(av => av.nivel === currentAvFilter);
+  }
+  filtered = filtered.filter(av => av.titulo.toLowerCase().includes(search));
+  
+  tbody.innerHTML = filtered.map((av, i) => `
+    <tr data-nivel="${av.nivel}">
+      <td>${av.titulo}</td>
+      <td>${av.disciplina}</td>
+      <td><span class="diff-badge ${av.nivel}">${av.nivel === 'easy' ? 'Fácil' : av.nivel === 'medium' ? 'Médio' : 'Difícil'}</span></td>
+      <td>${av.questoes}</td>
+      <td><span class="status-badge ${av.status === 'Ativa' ? 'active' : 'inactive'}">${av.status}</span></td>
+      <td>
+        <button class="action-btn" onclick="editAvaliacao(${i})" title="Editar">✏️</button>
+        <button class="action-btn" onclick="deleteAvaliacao(${i})" title="Excluir">🗑️</button>
+      </td>
+    </tr>
+  `).join('');
+  
+  document.getElementById('avaliacao-count').textContent = `${filtered.length} avaliações`;
+}
+
+function selectAvDiff(d) {
+  selectedAvDifficulty = d;
+  ['easy','medium','hard'].forEach(x => {
+    const el = document.getElementById('av-diff-'+x);
+    if (el) el.className = 'diff-opt' + (x===d ? ' selected-'+x : '');
+  });
+}
+
+function saveAvaliacao() {
+  const titulo = document.getElementById('avaliacao-titulo').value.trim();
+  const disciplina = document.getElementById('avaliacao-disciplina').value;
+  const descricao = document.getElementById('avaliacao-descricao').value;
+  
+  if (!titulo || !disciplina) {
+    showToast('⚠️ Preencha todos os campos!'); 
+    return;
+  }
+  
+  const disciplinaLabels = { programacao: 'Programação', 'eng-software': 'Engenharia de Software', bd: 'Banco de Dados', matematica: 'Matemática' };
+  
+  const nova = {
+    titulo: titulo,
+    disciplina: disciplinaLabels[disciplina],
+    descricao: descricao,
+    nivel: selectedAvDifficulty,
+    questoes: 0,
+    status: 'Ativa'
+  };
+  
+  if (editingAvIndex >= 0) {
+    avaliacoesData[editingAvIndex] = nova;
+    editingAvIndex = -1;
+  } else {
+    avaliacoesData.unshift(nova);
+  }
+  
+  localStorage.setItem('avaliacoesData', JSON.stringify(avaliacoesData));
+  
+  document.getElementById('avaliacao-titulo').value = '';
+  document.getElementById('avaliacao-descricao').value = '';
+  document.getElementById('avaliacao-disciplina').value = '';
+  closeModal('modal-nova-avaliacao');
+  showToast(editingAvIndex >= 0 ? '✅ Avaliação atualizada!' : '✅ Avaliação salva com sucesso!');
+  renderAvaliacoes();
+}
+
+function editAvaliacao(index) {
+  const av = avaliacoesData[index];
+  editingAvIndex = index;
+  
+  document.getElementById('avaliacao-titulo').value = av.titulo;
+  document.getElementById('avaliacao-descricao').value = av.descricao || '';
+  document.getElementById('avaliacao-disciplina').value = av.disciplina.toLowerCase().replace(' ', '-');
+  selectAvDiff(av.nivel);
+  
+  openModal('modal-nova-avaliacao');
+}
+
+function deleteAvaliacao(index) {
+  if (confirm('Tem certeza que deseja excluir esta avaliação?')) {
+    avaliacoesData.splice(index, 1);
+    localStorage.setItem('avaliacoesData', JSON.stringify(avaliacoesData));
+    showToast('🗑️ Avaliação excluída!');
+    renderAvaliacoes();
+  }
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', loadAvaliacoes);
+</script>
+
+<!-- ===== VLibras Widget ===== -->
+<div vw class="enabled">
+  <div vw-access-button class="active"></div>
+  <div vw-plugin-wrapper>
+    <div class="vw-plugin-top-wrapper"></div>
+  </div>
+</div>
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+<script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
+</body>
+</html>
